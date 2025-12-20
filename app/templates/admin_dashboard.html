@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dash</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Grace Jaeger, Clearings and Blessings</h1>
+    </header>
+
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">Select User</a>
+        <a href="{% url 'admin_create_user' %}">Create New User</a>
+    </div>
+
+    <main>
+        {% block content %}
+
+        <h2>Select a Primary Client</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.client.label_tag }}
+            {{ form.client }}
+            <button type="submit">Select</button>
+        </form>
+
+        {% if selected_client %}
+            <h3>{{ selected_client.name }}</h3>
+            <div class="secondary_navbar">
+                <a href="{% url 'admin_client_overview' %}">Overview</a>
+                <a href="{% url 'admin_client_new_session' %}">New Session</a>
+                <a href="{% url 'admin_client_prev_sessions' %}">Previous Sessions</a>
+                <a href="{% url 'admin_client_update' %}">Update</a>
+                <a href="{% url 'admin_delete_client' %}">Delete</a>
+            </div>
+        {% endif %}
+
+        {% endblock %}
+    </main>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Enhance the select element
+        $('#id_client').select2({
+            placeholder: "Select a client",
+            allowClear: true
+        });
+    });
+</script>
+</html>
