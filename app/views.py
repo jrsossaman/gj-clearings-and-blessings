@@ -44,7 +44,6 @@ def admin_dashboard(request):
 
 
 User = get_user_model()
-
 def admin_user_creation(request):
 #    if not request.user.is_staff:
 #        return redirect("login")
@@ -53,9 +52,10 @@ def admin_user_creation(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             email=form.cleaned_data["email"]
+            password=form.cleaned_data["password"] # Delete this field for production. Will be handled by user.set_unusable_password() below.
 
-            user = User.objects.create_user(username=email, email=email)
-            user.set_unusable_password()
+            user = User.objects.create_user(username=email, email=email, password=password) # Delete password=password for production. Added here for testing.
+#            user.set_unusable_password() # This will enable user-created passwords on password reset
             user.save()
             profile = Profile.objects.create(user=user)
 
@@ -70,8 +70,6 @@ def admin_user_creation(request):
             messages.success(request, f"User {email} created and password reset email sent.")
             return redirect('admin_create_user')
 
-#            login(request, user)
-#            return redirect("profile")
     else:
         form = UserCreationForm()    
     
