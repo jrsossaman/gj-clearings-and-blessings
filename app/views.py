@@ -42,6 +42,17 @@ def profile_view(request):
 
 
 
+#@login_required
+def session_sheet_detail(request, pk):
+    session_sheet = get_object_or_404(Session_Sheet, pk=pk)
+
+    if request.user != session_sheet.user and not request.user.is_superuser:
+        return redirect('profile')
+    
+    return render(request, 'session_sheet_detail.html', {'session_sheet': session_sheet})
+
+
+
 def is_admin(user):
     return user.is_superuser
 
@@ -63,17 +74,26 @@ User = get_user_model()
 def admin_user_creation(request):
   
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            email=form.cleaned_data["email"]
-            password=form.cleaned_data["password"] # Delete this field for production. Will be handled by user.set_unusable_password() below.
+        client_form = PrimaryClientCreationForm(request.POST)
+        user_form = UserCreationForm(request.POST)
+        if client_form.is_valid() and user_form.is_valid():
+            email=user_form.cleaned_data["email"]
+            password=user_form.cleaned_data["password"] # Delete this field for production. Will be handled by user.set_unusable_password() below.
 
             user = User.objects.create_user(username=email, email=email, password=password) # Delete password=password for production. Added here for testing.
 #            user.set_unusable_password() # This will enable user-created passwords on password reset
             user.save()
+
             profile = Profile.objects.create(user=user)
             profile.save()
-            client = Client.objects.create(profile=profile, first_name=None, last_name=None, email=user.email, is_user=True)
+
+            client = client_form.save(commit=False)#Client.objects.create(profile=profile, first_name=None, last_name=None, email=user.email, is_user=True)
+            client.profile = profile
+            client.email = email
+            if not profile.clients.exists():
+                client.is_user=True
+            else:
+                client.is_user=False
             client.save()
 
             reset_form = PasswordResetForm({"email": email})
@@ -88,9 +108,16 @@ def admin_user_creation(request):
             return redirect('admin_create_user')
 
     else:
-        form = UserCreationForm()    
+        client_form = PrimaryClientCreationForm()
+        user_form = UserCreationForm()    
     
-    return render(request, 'admin_create_user.html', {"form": form})
+    return render(request, 'admin_create_user.html', {"client_form": client_form, "user_form": user_form})
+
+
+#@login_required
+#@user_passes_test(is_admin)
+def admin_client_overview(request):
+    return render(request, 'admin_client_overview.html')
 
 
 #@login_required
@@ -105,15 +132,25 @@ def create_session_sheet(request):
     else:
         form = SessionSheetForm()
 
-    return render(request, 'session_sheet_detail.html', {'form': form})
-
+    return render(request, 'admin_new_session_sheet.html', {'form': form})
 
 
 #@login_required
-def session_sheet_detail(request, pk):
-    session_sheet = get_object_or_404(Session_Sheet, pk=pk)
+#@user_passes_test(is_admin)
+def view_prevs_as_admin(request):
+    return render(request, 'admin_prev_client_sessions.html')
 
-    if request.user != session_sheet.user and not request.user.is_superuser:
-        return redirect('profile')
-    
-    return render(request, 'session_sheet_detail.html', {'session_sheet': session_sheet})
+
+#@login_required
+#@user_passes_test(is_admin)
+def update_client_account(request):
+    return render(request, 'admin_update_client_account.html')
+
+
+#@login_required
+#@user_passes_test(is_admin)
+def delete_user_profile(request):
+    return render(request, 'admin_delete_user_profile.html')
+
+
+

@@ -6,18 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    <header>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
         <h1>Grace Jaeger, Clearings and Blessings</h1>
-    </header>
 
-    <div class="navbar">
-        <a href="{% url 'admin_dashboard' %}">Select User</a>
-        <a href="{% url 'admin_create_user' %}">Create New User</a>
-    </div>
+        <a href="{% url 'admin_dashboard' %}">Select Primary Client</a>
+        <a href="{% url 'admin_create_user' %}">Create New Account</a>
+        <button type="submit">Logout</button>
+    </header>
     
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ client_form.as_p }}
+        {{ user_form.as_p }}
         <button type="submit">
             Create User
         </button>

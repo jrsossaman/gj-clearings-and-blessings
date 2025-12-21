@@ -57,6 +57,19 @@ class UserCreationForm(forms.Form):
     
 
 
+class PrimaryClientCreationForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['first_name', 'last_name']
+    first_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'First Name'
+    }))
+    last_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'Last Name'
+    }))
+    
+
+
 class ClientSelectForm(forms.Form):
     client = forms.ModelChoiceField(
         queryset=Client.objects.filter(is_user=True),

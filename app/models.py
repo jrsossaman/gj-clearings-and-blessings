@@ -24,15 +24,15 @@ class Client(models.Model):
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="clients")
     first_name=models.CharField(max_length=15, null=True)
     last_name=models.CharField(max_length=20, null=True)
-    email=models.EmailField(blank=True, null=True)
+    email=models.EmailField(blank=True, null=True, unique=True)
     is_user=models.BooleanField(default=False, editable=False)
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            if self.profile.clients.filter(is_user=True).exists():
+            if self.profile and self.profile.clients.filter(is_user=True).exists():
                 self.is_user=False
             else: self.is_user=True
-        super().save(*args, *kwargs)
+        super(Client, self).save(*args, **kwargs)
 
         
 

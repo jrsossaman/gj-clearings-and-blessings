@@ -1,6 +1,6 @@
-{% extends 'admin_dashboard' %}
+{% extends "admin_dashboard.html" %}
 
-{% block content %}
+{% block inner_content %}
     <h2>Create a New Session Sheet</h2>
     
     <form method="POST">
@@ -8,6 +8,6 @@
         {{ form.as_p }}
         <button type="submit">Create Session Sheet</button>
     </form>
-
-    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+{% comment %} 
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a> {% endcomment %}
 {% endblock %}

@@ -23,8 +23,12 @@ import app.views
 urlpatterns = [
     path("", app.views.handle_login, name='login'),
     path("admin_dashboard/", app.views.admin_dashboard, name='admin_dashboard'),
-    path("admin_create_user/", app.views.admin_user_creation, name='admin_create_user'),
+    path("admin_client_overview/", app.views.admin_client_overview, name='admin_client_overview'),
     path("admin_new_session_sheet", app.views.create_session_sheet, name='admin_new_session_sheet'),
+    path("admin_prev_client_sessions", app.views.view_prevs_as_admin, name='admin_prev_client_sessions'),
+    path("admin_update_client_account", app.views.update_client_account, name='admin_update_client_account'),
+    path("admin_delete_user_profile", app.views.delete_user_profile, name='admin_delete_user_profile'),
+    path("admin_create_user/", app.views.admin_user_creation, name='admin_create_user'),
 
     # Password Reset Flow:
     path("reset_password/", auth_views.PasswordResetView.as_view(), name='password_reset'),
