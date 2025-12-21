@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dash</title>
+    <title>Admin Home</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center;">
         <h1>Grace Jaeger, Clearings and Blessings</h1>
 
-        <a href="{% url 'admin_dashboard' %}">Select Primary Client</a>
+        <a href="{% url 'reset_client_selection' %}">Select Primary Client</a>
         <a href="{% url 'admin_create_user' %}">Create New Account</a>
         <button type="submit">Logout</button>
     </header>
@@ -19,7 +19,7 @@
     <main>   
         {% if selected_client %}
             <div class="secondary_navbar">
-                <h3>{{ selected_client.name }}</h3>
+                <h3>{{ selected_client.first_name }} {{selected_client.last_name }}</h3>
                 <a href="{% url 'admin_client_overview' %}">Overview</a>
                 <a href="{% url 'admin_new_session_sheet' %}">New Session</a>
                 <a href="{% url 'admin_prev_client_sessions' %}">Previous Sessions</a>

@@ -74,7 +74,10 @@ class ClientSelectForm(forms.Form):
     client = forms.ModelChoiceField(
         queryset=Client.objects.filter(is_user=True),
         empty_label="Select a client",
-        required=True
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'select2'
+        })
     )
 
 

@@ -56,17 +56,6 @@ def session_sheet_detail(request, pk):
 def is_admin(user):
     return user.is_superuser
 
-#@login_required
-#@user_passes_test(is_admin)
-def admin_dashboard(request):
-    form = ClientSelectForm()
-    selected_client = None
-    if request.method == "POST":
-        form = ClientSelectForm(request.POST)
-        if form.is_valid():
-            selected_client = form.cleaned_data["client"]
-    return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
-
 
 User = get_user_model()
 #@login_required
@@ -116,13 +105,61 @@ def admin_user_creation(request):
 
 #@login_required
 #@user_passes_test(is_admin)
+def admin_dashboard(request):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client')  # Get client ID from session
+
+    if selected_client_id:
+        try:
+            selected_client = Client.objects.get(id=selected_client_id)  # Fetch the client object
+        except Client.DoesNotExist:
+            selected_client = None  # In case the client is deleted or invalid
+
+    if request.method == "POST":
+        form = ClientSelectForm(request.POST)
+        if form.is_valid():
+            selected_client = form.cleaned_data["client"]
+            request.session['selected_client'] = selected_client.id  # Store client ID in session
+            return redirect('admin_dashboard')  # Reload to reflect the new selection
+    else:
+        # If there's a selected client, initialize the form with that client object
+        form = ClientSelectForm(initial={'client': selected_client}) if selected_client else ClientSelectForm()
+
+    return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
+#    form = ClientSelectForm()
+#    selected_client = None
+#    if request.method == "POST":
+#        form = ClientSelectForm(request.POST)
+#        if form.is_valid():
+#            selected_client = form.cleaned_data["client"]
+#            request.session['selected_client'] = selected_client.id
+#            return redirect('admin_dashboard')
+#    
+#    selected_client_id = request.session.get('selected_client')
+#    if selected_client_id:
+#        selected_client = Client.objects.get(id=selected_client_id)
+#
+#    return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
+
+
+#@login_required
+#@user_passes_test(is_admin)
 def admin_client_overview(request):
-    return render(request, 'admin_client_overview.html')
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+    return render(request, 'admin_client_overview.html', {'selected_client': selected_client})
 
 
 #@login_required
 #@user_passes_test(is_admin)
 def create_session_sheet(request):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
     if request.method == 'POST':
         form = SessionSheetForm(request.POST)
         if form.is_valid():
@@ -132,7 +169,7 @@ def create_session_sheet(request):
     else:
         form = SessionSheetForm()
 
-    return render(request, 'admin_new_session_sheet.html', {'form': form})
+    return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
 
 
 #@login_required
@@ -153,4 +190,7 @@ def delete_user_profile(request):
     return render(request, 'admin_delete_user_profile.html')
 
 
-
+def reset_client_selection(request):
+    if 'selected_client' in request.session:
+        del request.session['selected_client']
+    return redirect('admin_dashboard')

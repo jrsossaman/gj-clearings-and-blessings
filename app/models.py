@@ -27,6 +27,9 @@ class Client(models.Model):
     email=models.EmailField(blank=True, null=True, unique=True)
     is_user=models.BooleanField(default=False, editable=False)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
     def save(self, *args, **kwargs):
         if not self.pk:
             if self.profile and self.profile.clients.filter(is_user=True).exists():
