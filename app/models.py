@@ -22,7 +22,7 @@ class Profile(models.Model):
 
 class Client(models.Model):
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="clients")
-    first_name=models.CharField(max_length=15)
+    first_name=models.CharField(max_length=15, null=True)
     last_name=models.CharField(max_length=20, null=True)
     email=models.EmailField(blank=True, null=True)
     is_user=models.BooleanField(default=False, editable=False)

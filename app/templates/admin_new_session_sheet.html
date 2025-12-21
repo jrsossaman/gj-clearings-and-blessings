@@ -1,0 +1,13 @@
+{% extends 'admin_dashboard' %}
+
+{% block content %}
+    <h2>Create a New Session Sheet</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Session Sheet</button>
+    </form>
+
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+{% endblock %}

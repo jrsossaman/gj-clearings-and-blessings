@@ -24,6 +24,7 @@ urlpatterns = [
     path("", app.views.handle_login, name='login'),
     path("admin_dashboard/", app.views.admin_dashboard, name='admin_dashboard'),
     path("admin_create_user/", app.views.admin_user_creation, name='admin_create_user'),
+    path("admin_new_session_sheet", app.views.create_session_sheet, name='admin_new_session_sheet'),
 
     # Password Reset Flow:
     path("reset_password/", auth_views.PasswordResetView.as_view(), name='password_reset'),

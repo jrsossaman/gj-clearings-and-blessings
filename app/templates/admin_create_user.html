@@ -1,20 +1,36 @@
-{% extends "admin_dashboard.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h1>Grace Jaeger, Clearings and Blessings</h1>
+    </header>
 
-{% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">
-        Create User
-    </button>
-</form>
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">Select User</a>
+        <a href="{% url 'admin_create_user' %}">Create New User</a>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            Create User
+        </button>
+    </form>
 
-{% if messages %}   
-<ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+    {% if messages %}   
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
-{% endblock %}
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.models import User
 
@@ -62,3 +63,19 @@ class ClientSelectForm(forms.Form):
         empty_label="Select a client",
         required=True
     )
+
+
+
+class SessionSheetForm(ModelForm):
+    class Meta:
+        model = Session_Sheet
+        fields = [
+            'user', 'client', 'date',
+            'spiritual1', 'mental1', 'emotional1', 'physical1',
+            'chakras', 'cords', 'hinderances', 'dark_entities', 'attacks',
+            'social', 'viruses',
+            'spiritual2', 'mental2', 'emotional2', 'physical2'
+        ]
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }

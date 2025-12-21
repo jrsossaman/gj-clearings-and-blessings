@@ -18,8 +18,9 @@
 
     <main>
         {% block content %}
+        
+        <h2>Select the Primary Client</h2>
 
-        <h2>Select a Primary Client</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.client.label_tag }}
@@ -38,7 +39,11 @@
             </div>
         {% endif %}
 
-        {% endblock %}
+        {% block inner_content %}
+        
+        {% endblock inner_content %}
+
+        {% endblock content %}
     </main>
 
 </body>
