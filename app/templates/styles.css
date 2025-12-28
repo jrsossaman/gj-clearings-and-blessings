@@ -14,3 +14,40 @@
 .navbar a:hover {
     background-color: gray;
 }
+
+
+
+.session-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+    border: 1px solid #ddd
+}
+
+.grid-header {
+    display: contents;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.session-sheet-grid > div {
+    padding: 10px;
+    border: 1px;
+    text-align: center;
+}
+
+.session-sheet-grid .session-sheet-row div {
+    font-size: 20px;
+}
+
+.session-sheet-grid .session-sheet-row div:nth-child(6),
+.session-sheet-grid .session-sheet-row div:nth-child(7),
+.session-sheet-grid .session-sheet-row div:nth-child(8),
+.session-sheet-grid .session-sheet-row div:nth-child(9),
+.session-sheet-grid .session-sheet-row div:nth-child(10),
+.session-sheet-grid .session-sheet-row div:nth-child(11),
+.session-sheet-grid .session-sheet-row div:nth-child(12) {
+    font-weight: bold;
+}

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, Http404
 from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.models import User
@@ -22,7 +23,7 @@ def handle_login(request):
 
             if user is not None:
                 login(request, user)
-                if user.is_superuser:
+                if user.is_staff:
                     return redirect("admin_dashboard")
                 else:
                     return redirect("profile")
@@ -52,14 +53,29 @@ def session_sheet_detail(request, pk):
     return render(request, 'session_sheet_detail.html', {'session_sheet': session_sheet})
 
 
+################################################################################################################
+
+
+def create_admin_user(request):
+    if request.method == 'POST':
+        email=request.POST.get('email')
+        password=request.POST.get('password')
+        user = User.objects.create_user(username=email, email=email, password=password)
+        user.is_staff=True
+        user.save()
+        login(request, user)
+        return HttpResponse("Admin user created successfully!")
+    return render(request, 'create_admin_user.html')
+# Set CSRF_COOKIE_SECURE = False at the bottom of settings. Reset to True before launch.
+
 
 def is_admin(user):
-    return user.is_superuser
+    return user.is_staff
 
 
 User = get_user_model()
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def admin_user_creation(request):
   
     if request.method == "POST":
@@ -103,8 +119,8 @@ def admin_user_creation(request):
     return render(request, 'admin_create_user.html', {"client_form": client_form, "user_form": user_form})
 
 
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def admin_dashboard(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client')  # Get client ID from session
@@ -126,24 +142,11 @@ def admin_dashboard(request):
         form = ClientSelectForm(initial={'client': selected_client}) if selected_client else ClientSelectForm()
 
     return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
-#    form = ClientSelectForm()
-#    selected_client = None
-#    if request.method == "POST":
-#        form = ClientSelectForm(request.POST)
-#        if form.is_valid():
-#            selected_client = form.cleaned_data["client"]
-#            request.session['selected_client'] = selected_client.id
-#            return redirect('admin_dashboard')
-#    
-#    selected_client_id = request.session.get('selected_client')
-#    if selected_client_id:
-#        selected_client = Client.objects.get(id=selected_client_id)
-#
-#    return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
 
 
-#@login_required
-#@user_passes_test(is_admin)
+
+@login_required
+@user_passes_test(is_admin)
 def admin_client_overview(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client', None)
@@ -152,40 +155,99 @@ def admin_client_overview(request):
     return render(request, 'admin_client_overview.html', {'selected_client': selected_client})
 
 
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def create_session_sheet(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client', None)
+
+    print("Selected client ID from session:", selected_client_id)
+
     if selected_client_id:
-        selected_client = Client.objects.get(id=selected_client_id)
+        selected_client = User.objects.get(id=selected_client_id)
+
+    if selected_client:
+        profile = selected_client.profile
+        clients = Client.objects.filter(profile=profile)
+    else:
+        clients = Client.objects.none()
 
     if request.method == 'POST':
+        print("Selected client ID:", selected_client_id)
         form = SessionSheetForm(request.POST)
         if form.is_valid():
             session_sheet = form.save(commit=False)
+            session_sheet.user = selected_client
+            session_sheet.client = form.cleaned_data['client']
             session_sheet.save()
-            return redirect('session_sheet_detail', pk=session_sheet.pk)
+            return redirect('admin_prev_client_sessions')
     else:
         form = SessionSheetForm()
 
     return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
 
 
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def view_prevs_as_admin(request):
-    return render(request, 'admin_prev_client_sessions.html')
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    user = request.user
+    if user.is_staff:
+        profile = getattr(user, 'profile', None)
+    else:
+        try:
+            profile = user.profile
+        except Profile.DoesNotExist:
+            raise Http404('Profile not found.')
+        
+    if selected_client:
+        clients = Client.objects.filter(profile=selected_client.profile)
+    else:
+        clients = Client.objects.none()
+
+    client_filter = None
+    date_filter = None
+    session_sheets = Session_Sheet.objects.none()
+
+    if request.method == 'GET':
+        client_filter=request.GET.get('client')
+        date_filter=request.GET.get('date')
+        if client_filter:
+            selected_client=Client.objects.get(id=client_filter)
+            session_sheets=session_sheets.filter(client=selected_client)
+        if date_filter:
+            session_sheets=session_sheets.filter(date=date_filter)
+    
+    session_sheets=session_sheets.order_by('-date')
+
+    context = {
+        'selected_client': selected_client,
+        'clients': clients,
+        'session_sheets': session_sheets,
+        'client_filter': client_filter,
+        'date_filter': date_filter
+    }
+
+    return render(request, 'admin_prev_client_sessions.html', context)
 
 
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def update_client_account(request):
-    return render(request, 'admin_update_client_account.html')
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    return render(request, 'admin_update_client_account.html', {'selected_client': selected_client})
 
 
-#@login_required
-#@user_passes_test(is_admin)
+@login_required
+@user_passes_test(is_admin)
 def delete_user_profile(request):
     return render(request, 'admin_delete_user_profile.html')
 

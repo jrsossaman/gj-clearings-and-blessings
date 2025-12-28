@@ -30,6 +30,7 @@ urlpatterns = [
     path("admin_update_client_account", app.views.update_client_account, name='admin_update_client_account'),
     path("admin_delete_user_profile", app.views.delete_user_profile, name='admin_delete_user_profile'),
     path("admin_create_user/", app.views.admin_user_creation, name='admin_create_user'),
+    path("create_admin_user", app.views.create_admin_user, name='create_admin_user'),
 
     # Password Reset Flow:
     path("reset_password/", auth_views.PasswordResetView.as_view(), name='password_reset'),

@@ -86,7 +86,7 @@ class SessionSheetForm(ModelForm):
     class Meta:
         model = Session_Sheet
         fields = [
-            'user', 'client', 'date',
+            'date',
             'spiritual1', 'mental1', 'emotional1', 'physical1',
             'chakras', 'cords', 'hinderances', 'dark_entities', 'attacks',
             'social', 'viruses',

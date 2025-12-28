@@ -2,12 +2,120 @@
 
 {% block content %}
 
-<h3>title goes here</h3>
 
-{% comment %} 
 
-LEFT OFF HERE
+<h3>Previous Sessions for {{ selected_client.first_name }} {{ selected_client.last_name }}'s account.</h3>
 
-{% endcomment %}
+<form method="get">
+    <label for="client">Select client:</label>
+    <select name="client" id="client" required>
+        <option value="">-- Choose client --</option>
+        {% for client in clients %}
+            <option value="{{ client.id }}">{% if client.id == client_filter %}selected{% endif %}
+                {{ client.first_name }} {{ client.last_name }}
+            </option>
+        {% endfor %}
+    </select>
 
+    <label for="date">Select date:</label>
+    <input type="date" name="date" id="date" value="{{ date_filter }}">
+
+    <button type="submit">Filter</button>
+</form>
+
+{% if session_sheets %}
+    <div class="session-sheet-grid">
+        <div class="grid-header">
+            <div>Date</div>
+            <div>S1</div>
+            <div>M1</div>
+            <div>E1</div>
+            <div>P1</div>
+            <div>Total 1</div>
+            <div>Chakras</div>
+            <div>Cords</div>
+            <div>Hinderances</div>
+            <div>Dark Entities</div>
+            <div>Attacks</div>
+            <div>Social</div>
+            <div>Viruses</div>
+            <div>S2</div>
+            <div>M2</div>
+            <div>E2</div>
+            <div>P2</div>
+            <div>Total 2</div>
+            <div>Percent Change</div>
+        </div>
+        {% for sheet in session_sheets%}
+            <div class="session-sheet-row">
+                <div>{{ sheet.date }}</div>
+                <div>{{ sheet.spiritual1 }}</div>
+                <div>{{ sheet.mental1 }}</div>
+                <div>{{ sheet.emotional1 }}</div>
+                <div>{{ sheet.physical1 }}</div>
+                <div>{{ sheet.total1 }}</div>
+                <div>
+                    {% if sheet.chakras %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.cords %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.hinderances %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.dark_entities %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.attacks %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.social %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.virueses %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>{{ sheet.spiritual2 }}</div>
+                <div>{{ sheet.mental2 }}</div>
+                <div>{{ sheet.emotional2 }}</div>
+                <div>{{ sheet.physical2 }}</div>
+                <div>{{ sheet.total2 }}</div>
+                <div>{{ sheet.percent_change }}</div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No session sheets were found.</p>
+{% endif %}
+
+
+      
 {% endblock %}
