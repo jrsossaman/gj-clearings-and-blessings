@@ -76,8 +76,7 @@ def is_admin(user):
 User = get_user_model()
 @login_required
 @user_passes_test(is_admin)
-def admin_user_creation(request):
-  
+def admin_user_creation(request):  
     if request.method == "POST":
         client_form = PrimaryClientCreationForm(request.POST)
         user_form = UserCreationForm(request.POST)
@@ -155,16 +154,14 @@ def admin_client_overview(request):
     return render(request, 'admin_client_overview.html', {'selected_client': selected_client})
 
 
+
 @login_required
 @user_passes_test(is_admin)
 def create_session_sheet(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client', None)
-
-    print("Selected client ID from session:", selected_client_id)
-
     if selected_client_id:
-        selected_client = User.objects.get(id=selected_client_id)
+        selected_client = Client.objects.get(id=selected_client_id)
 
     if selected_client:
         profile = selected_client.profile
@@ -185,6 +182,7 @@ def create_session_sheet(request):
         form = SessionSheetForm()
 
     return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
+
 
 
 @login_required
@@ -235,6 +233,7 @@ def view_prevs_as_admin(request):
     return render(request, 'admin_prev_client_sessions.html', context)
 
 
+
 @login_required
 @user_passes_test(is_admin)
 def update_client_account(request):
@@ -243,13 +242,25 @@ def update_client_account(request):
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
 
-    return render(request, 'admin_update_client_account.html', {'selected_client': selected_client})
+    client_form = AdditionalClientCreationForm()
+
+    if request.method == "POST":
+        client_form = AdditionalClientCreationForm(request.POST)
+        if client_form.is_valid():
+            client = client_form.save(commit=False)
+            client.profile = selected_client.profile
+            client.is_user = False
+            client.save()
+
+    return render(request, 'admin_update_client_account.html', {'client_form': client_form, 'selected_client': selected_client})
+
 
 
 @login_required
 @user_passes_test(is_admin)
 def delete_user_profile(request):
     return render(request, 'admin_delete_user_profile.html')
+
 
 
 def reset_client_selection(request):

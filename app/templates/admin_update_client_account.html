@@ -2,6 +2,16 @@
 
 {% block content %}
 
-<h3>Hello from the update page.</h3>
+<h3>You can make updates to {{ selected_client.first_name }} {{ selected_client.last_name }}'s account.</h3>
+
+<form method="post">
+    {% csrf_token %}
+    <label>Add a new client.
+        {{ client_form.as_p }}
+        <button type="submit">Add Client</button>
+    </label>
+</form>
+
+{% comment %} ####  Another form for Location  #### {% endcomment %}
 
 {% endblock %}
