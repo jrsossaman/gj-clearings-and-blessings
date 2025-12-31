@@ -1,10 +1,15 @@
 {% extends "admin_dashboard.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/prev_session_sheets.css' %}">
+{% endblock %}
 
 {% block content %}
 
 
 
-<h3>Previous Sessions for {{ selected_client.first_name }} {{ selected_client.last_name }}'s account.</h3>
+<h3>Previous Sessions for {{ user_client.first_name }} {{ user_client.last_name }}'s account.</h3> {% comment %} "selected_client" before {% endcomment %}
 
 <form method="get">
     <label for="client">Select client:</label>
@@ -26,6 +31,7 @@
 {% if session_sheets %}
     <div class="session-sheet-grid">
         <div class="grid-header">
+            <div>Client Name</div>
             <div>Date</div>
             <div>S1</div>
             <div>M1</div>
@@ -97,7 +103,7 @@
                     {% endif %}
                 </div>
                 <div>
-                    {% if sheet.virueses %}
+                    {% if sheet.viruses %}
                         &#10004
                     {% else %}
                         &#10008

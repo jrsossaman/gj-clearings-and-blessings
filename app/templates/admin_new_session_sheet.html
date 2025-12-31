@@ -1,7 +1,7 @@
 {% extends "admin_dashboard.html" %}
 
 {% block content %}
-    <h2>Create a New Session Sheet for {{ selected_client.first_name }} {{selected_client.last_name }}</h2>
+    <h2>Create a new Session Sheet for {{ selected_client.first_name }} {{selected_client.last_name }}'s Account</h2>
     
     <form method="POST">
         {% csrf_token %}

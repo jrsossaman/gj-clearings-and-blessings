@@ -102,7 +102,7 @@ class SessionSheetForm(ModelForm):
     class Meta:
         model = Session_Sheet
         fields = [
-            'date',
+            'client', 'date',
             'spiritual1', 'mental1', 'emotional1', 'physical1',
             'chakras', 'cords', 'hinderances', 'dark_entities', 'attacks',
             'social', 'viruses',
@@ -111,3 +111,9 @@ class SessionSheetForm(ModelForm):
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        clients_queryset = kwargs.pop('clients_queryset', None)
+        super().__init__(*args, **kwargs)
+        if clients_queryset is not None:
+            self.fields['client'].queryset = clients_queryset

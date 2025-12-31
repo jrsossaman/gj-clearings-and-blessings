@@ -158,30 +158,50 @@ def admin_client_overview(request):
 @login_required
 @user_passes_test(is_admin)
 def create_session_sheet(request):
-    selected_client = None
     selected_client_id = request.session.get('selected_client', None)
-    if selected_client_id:
-        selected_client = Client.objects.get(id=selected_client_id)
+    if not selected_client_id:
+        raise Http404("No client selected.")
 
-    if selected_client:
-        profile = selected_client.profile
-        clients = Client.objects.filter(profile=profile)
-    else:
-        clients = Client.objects.none()
+    user_client = Client.objects.get(id=selected_client_id)
+    clients = Client.objects.filter(profile=user_client.profile)
 
     if request.method == 'POST':
-        print("Selected client ID:", selected_client_id)
-        form = SessionSheetForm(request.POST)
+        form = SessionSheetForm(request.POST, clients_queryset=clients)
         if form.is_valid():
             session_sheet = form.save(commit=False)
-            session_sheet.user = selected_client
-            session_sheet.client = form.cleaned_data['client']
+            session_sheet.user = user_client
             session_sheet.save()
             return redirect('admin_prev_client_sessions')
     else:
-        form = SessionSheetForm()
+        form = SessionSheetForm(clients_queryset=clients)
 
-    return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
+    return render(request, 'admin_new_session_sheet.html', {
+        'form': form,
+        'selected_client': user_client
+    })
+#    selected_client = None
+#    selected_client_id = request.session.get('selected_client', None)
+#    if selected_client_id:
+#        selected_client = Client.objects.get(id=selected_client_id)
+#
+#    if selected_client:
+#        profile = selected_client.profile
+#        clients = Client.objects.filter(profile=profile)
+#    else:
+#        clients = Client.objects.none()
+#
+#    if request.method == 'POST':
+#        form = SessionSheetForm(request.POST)
+#        if form.is_valid():
+#            session_sheet = form.save(commit=False)
+#            session_sheet.user = selected_client
+#            session_sheet.client = form.cleaned_data['client']
+#            session_sheet.save()
+#            return redirect('admin_prev_client_sessions')
+#    else:
+#        form = SessionSheetForm()
+#
+#    return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
 
 
 
@@ -193,44 +213,86 @@ def view_prevs_as_admin(request):
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
 
-    user = request.user
-    if user.is_staff:
-        profile = getattr(user, 'profile', None)
-    else:
-        try:
-            profile = user.profile
-        except Profile.DoesNotExist:
-            raise Http404('Profile not found.')
-        
-    if selected_client:
-        clients = Client.objects.filter(profile=selected_client.profile)
-    else:
-        clients = Client.objects.none()
+    # Get the USER-CLIENT from session (account owner)
+    user_client_id = selected_client_id #request.session.get('selected_client')
+    if not user_client_id:
+        raise Http404("No client selected.")
 
-    client_filter = None
-    date_filter = None
-    session_sheets = Session_Sheet.objects.none()
+    user_client = Client.objects.get(id=user_client_id)
 
-    if request.method == 'GET':
-        client_filter=request.GET.get('client')
-        date_filter=request.GET.get('date')
-        if client_filter:
-            selected_client=Client.objects.get(id=client_filter)
-            session_sheets=session_sheets.filter(client=selected_client)
-        if date_filter:
-            session_sheets=session_sheets.filter(date=date_filter)
-    
-    session_sheets=session_sheets.order_by('-date')
+    # All clients on this account (user + secondary)
+    clients = Client.objects.filter(profile=user_client.profile)
+
+    # Base queryset: ALL sessions for this profile
+    session_sheets = Session_Sheet.objects.filter(
+        client__profile=user_client.profile
+    )
+
+    # Filters
+    client_filter = request.GET.get('client')
+    date_filter = request.GET.get('date')
+
+    if client_filter:
+        session_sheets = session_sheets.filter(client_id=client_filter)
+
+    if date_filter:
+        session_sheets = session_sheets.filter(date=date_filter)
+
+    session_sheets = session_sheets.order_by('-date')
 
     context = {
         'selected_client': selected_client,
-        'clients': clients,
+        'user_client': user_client,           # account owner
+        'clients': clients,                   # dropdown list
         'session_sheets': session_sheets,
-        'client_filter': client_filter,
-        'date_filter': date_filter
+        'client_filter': int(client_filter) if client_filter else None,
+        'date_filter': date_filter,
     }
 
     return render(request, 'admin_prev_client_sessions.html', context)
+#    selected_client = None
+#    selected_client_id = request.session.get('selected_client', None)
+#    if selected_client_id:
+#        selected_client = Client.objects.get(id=selected_client_id)
+#
+#    user = request.user
+#    if user.is_staff:
+#        profile = getattr(user, 'profile', None)
+#    else:
+#        try:
+#            profile = user.profile
+#        except Profile.DoesNotExist:
+#            raise Http404('Profile not found.')
+#        
+#    if selected_client:
+#        clients = Client.objects.filter(profile=selected_client.profile)
+#    else:
+#        clients = Client.objects.none()
+#
+#    client_filter = None
+#    date_filter = None
+#    session_sheets = Session_Sheet.objects.none()
+#
+#    if request.method == 'GET':
+#        client_filter=request.GET.get('client')
+#        date_filter=request.GET.get('date')
+#        if client_filter:
+#            selected_client=Client.objects.get(id=client_filter)
+#            session_sheets=session_sheets.filter(client=selected_client)
+#        if date_filter:
+#            session_sheets=session_sheets.filter(date=date_filter)
+#    
+#    session_sheets=session_sheets.order_by('-date')
+#
+#    context = {
+#        'selected_client': selected_client,
+#        'clients': clients,
+#        'session_sheets': session_sheets,
+#        'client_filter': client_filter,
+#        'date_filter': date_filter
+#    }
+#
+#    return render(request, 'admin_prev_client_sessions.html', context)
 
 
 
