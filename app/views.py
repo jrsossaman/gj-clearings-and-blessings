@@ -42,17 +42,6 @@ def profile_view(request):
     return render(request, "user_profile.html", {"profile": profile})
 
 
-
-#@login_required
-def session_sheet_detail(request, pk):
-    session_sheet = get_object_or_404(Session_Sheet, pk=pk)
-
-    if request.user != session_sheet.user and not request.user.is_superuser:
-        return redirect('profile')
-    
-    return render(request, 'session_sheet_detail.html', {'session_sheet': session_sheet})
-
-
 ################################################################################################################
 
 
@@ -169,7 +158,7 @@ def create_session_sheet(request):
         form = SessionSheetForm(request.POST, clients_queryset=clients)
         if form.is_valid():
             session_sheet = form.save(commit=False)
-            session_sheet.user = user_client
+            session_sheet.user = request.session.get('selected_client') # 'user_client' before
             session_sheet.save()
             return redirect('admin_prev_client_sessions')
     else:
@@ -179,29 +168,7 @@ def create_session_sheet(request):
         'form': form,
         'selected_client': user_client
     })
-#    selected_client = None
-#    selected_client_id = request.session.get('selected_client', None)
-#    if selected_client_id:
-#        selected_client = Client.objects.get(id=selected_client_id)
-#
-#    if selected_client:
-#        profile = selected_client.profile
-#        clients = Client.objects.filter(profile=profile)
-#    else:
-#        clients = Client.objects.none()
-#
-#    if request.method == 'POST':
-#        form = SessionSheetForm(request.POST)
-#        if form.is_valid():
-#            session_sheet = form.save(commit=False)
-#            session_sheet.user = selected_client
-#            session_sheet.client = form.cleaned_data['client']
-#            session_sheet.save()
-#            return redirect('admin_prev_client_sessions')
-#    else:
-#        form = SessionSheetForm()
-#
-#    return render(request, 'admin_new_session_sheet.html', {'form': form, 'selected_client': selected_client})
+
 
 
 

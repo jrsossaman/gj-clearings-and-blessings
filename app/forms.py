@@ -80,7 +80,7 @@ class AdditionalClientCreationForm(forms.ModelForm):
     last_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Last Name'
     }))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={
+    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={
         'placeholder': 'Email (optional)'
     }))
     

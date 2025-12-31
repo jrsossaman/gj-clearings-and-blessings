@@ -40,7 +40,7 @@ class Client(models.Model):
         
 
 class Session_Sheet(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
+#    user=models.ForeignKey(User, on_delete=models.CASCADE)
     client=models.ForeignKey(Client, on_delete=models.CASCADE)
 
     date=models.DateField()
