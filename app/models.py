@@ -37,10 +37,38 @@ class Client(models.Model):
             else: self.is_user=True
         super(Client, self).save(*args, **kwargs)
 
+
+
+class Location(models.Model):
+    RESIDENCE = "residence"
+    BUSINESS = "business"
+
+    LOCATION_TYPE_CHOICES = [
+        (RESIDENCE, "Residence"),
+        (BUSINESS, "Business")
+    ]
+
+    profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="locations")
+    location_type=models.CharField(
+        max_length=20,
+        choices=LOCATION_TYPE_CHOICES,
+        default=RESIDENCE
+    )
+    street=models.CharField(max_length=20, null=True)
+    street_ext=models.CharField(max_length=10, null=True, blank=True)
+    city=models.CharField(max_length=20, null=True)
+    state=models.CharField(max_length=20, null=True)
+    zip_code=models.CharField(max_length=10, null=True)
+    country=models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        return f"{self.street} {self.street_ext} {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
+    
+    # Do I need a save() method?
+
         
 
 class Session_Sheet(models.Model):
-#    user=models.ForeignKey(User, on_delete=models.CASCADE)
     client=models.ForeignKey(Client, on_delete=models.CASCADE)
 
     date=models.DateField()

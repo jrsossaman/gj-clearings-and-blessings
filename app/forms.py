@@ -83,6 +83,13 @@ class AdditionalClientCreationForm(forms.ModelForm):
     email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={
         'placeholder': 'Email (optional)'
     }))
+
+
+
+class LocationCreationForm(forms.ModelForm):
+    class Meta:
+        model = Location
+        fields = ['location_type', 'street', 'street_ext', 'city', 'state', 'zip_code', 'country']
     
 
 

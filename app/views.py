@@ -140,7 +140,15 @@ def admin_client_overview(request):
     selected_client_id = request.session.get('selected_client', None)
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
-    return render(request, 'admin_client_overview.html', {'selected_client': selected_client})
+
+    user_client = Client.objects.get(id=selected_client_id)
+    clients = Client.objects.filter(profile=user_client.profile)
+    locations = Location.objects.filter(profile=user_client.profile)
+
+    context = {'selected_client': selected_client,
+               'clients': clients,
+               'locations': locations}
+    return render(request, 'admin_client_overview.html', context)
 
 
 
@@ -217,49 +225,6 @@ def view_prevs_as_admin(request):
     }
 
     return render(request, 'admin_prev_client_sessions.html', context)
-#    selected_client = None
-#    selected_client_id = request.session.get('selected_client', None)
-#    if selected_client_id:
-#        selected_client = Client.objects.get(id=selected_client_id)
-#
-#    user = request.user
-#    if user.is_staff:
-#        profile = getattr(user, 'profile', None)
-#    else:
-#        try:
-#            profile = user.profile
-#        except Profile.DoesNotExist:
-#            raise Http404('Profile not found.')
-#        
-#    if selected_client:
-#        clients = Client.objects.filter(profile=selected_client.profile)
-#    else:
-#        clients = Client.objects.none()
-#
-#    client_filter = None
-#    date_filter = None
-#    session_sheets = Session_Sheet.objects.none()
-#
-#    if request.method == 'GET':
-#        client_filter=request.GET.get('client')
-#        date_filter=request.GET.get('date')
-#        if client_filter:
-#            selected_client=Client.objects.get(id=client_filter)
-#            session_sheets=session_sheets.filter(client=selected_client)
-#        if date_filter:
-#            session_sheets=session_sheets.filter(date=date_filter)
-#    
-#    session_sheets=session_sheets.order_by('-date')
-#
-#    context = {
-#        'selected_client': selected_client,
-#        'clients': clients,
-#        'session_sheets': session_sheets,
-#        'client_filter': client_filter,
-#        'date_filter': date_filter
-#    }
-#
-#    return render(request, 'admin_prev_client_sessions.html', context)
 
 
 
@@ -272,16 +237,29 @@ def update_client_account(request):
         selected_client = Client.objects.get(id=selected_client_id)
 
     client_form = AdditionalClientCreationForm()
+    location_form = LocationCreationForm()
 
     if request.method == "POST":
-        client_form = AdditionalClientCreationForm(request.POST)
-        if client_form.is_valid():
-            client = client_form.save(commit=False)
-            client.profile = selected_client.profile
-            client.is_user = False
-            client.save()
+        if 'submit_client' in request.POST:
+            client_form = AdditionalClientCreationForm(request.POST)
+            if client_form.is_valid():
+                client = client_form.save(commit=False)
+                client.profile = selected_client.profile
+                client.is_user = False
+                client.save()
+                return redirect('admin_client_overview')
+        elif 'submit_location' in request.POST:
+            location_form = LocationCreationForm(request.POST)
+            if location_form.is_valid():
+                location = location_form.save(commit=False)
+                location.profile = selected_client.profile
+                location.save()
+                return redirect('admin_client_overview')
+        else:
+            client_form = AdditionalClientCreationForm()
+            location_form = LocationCreationForm()
 
-    return render(request, 'admin_update_client_account.html', {'client_form': client_form, 'selected_client': selected_client})
+    return render(request, 'admin_update_client_account.html', {'client_form': client_form, 'location_form': location_form, 'selected_client': selected_client})
 
 
 

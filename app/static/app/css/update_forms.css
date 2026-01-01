@@ -1,0 +1,10 @@
+.form-container {
+    display: flex;
+    gap: 20px;           /* space between the forms */
+    align-items: flex-start; /* align top edges */
+}
+
+.form-container form {
+    flex: 1;             /* each form takes equal width */
+    min-width: 300px;    /* optional: prevent forms from getting too small */
+}

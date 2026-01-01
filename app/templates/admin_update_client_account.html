@@ -1,16 +1,31 @@
 {% extends 'admin_dashboard.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/update_forms.css' %}">
+{% endblock %}
 
 {% block content %}
 
 <h3>You can make updates to {{ selected_client.first_name }} {{ selected_client.last_name }}'s account.</h3>
 
-<form method="post">
-    {% csrf_token %}
-    <label>Add a new client.
-        {{ client_form.as_p }}
-        <button type="submit">Add Client</button>
-    </label>
-</form>
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        <label>Add a new client.
+            {{ client_form.as_p }}
+            <button type="submit" name="submit_client">Add Client</button>
+        </label>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Add a new location.
+            {{ location_form.as_p }}
+            <button type="submit" name="submit_location">Add Location</button>
+        </label>
+    </form>
+</div>
 
 {% comment %} ####  Another form for Location  #### {% endcomment %}
 
