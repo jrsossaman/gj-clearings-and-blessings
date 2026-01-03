@@ -163,19 +163,32 @@ def create_session_sheet(request):
 
     user_client = Client.objects.get(id=selected_client_id)
     clients = Client.objects.filter(profile=user_client.profile)
+    locations = Location.objects.filter(profile=user_client.profile)
+
+    client_session_form = SessionSheetForm(clients_queryset=clients)
+    location_session_form = LocationSheetForm(locations_queryset=locations)
 
     if request.method == 'POST':
-        form = SessionSheetForm(request.POST, clients_queryset=clients)
-        if form.is_valid():
-            session_sheet = form.save(commit=False)
-            session_sheet.user = request.session.get('selected_client') # 'user_client' before
-            session_sheet.save()
-            return redirect('admin_prev_client_sessions')
-    else:
-        form = SessionSheetForm(clients_queryset=clients)
+        if 'submit_client_session' in request.POST:
+            client_session_form = SessionSheetForm(request.POST, clients_queryset=clients)
+            if client_session_form.is_valid():
+                session_sheet = client_session_form.save(commit=False)
+                session_sheet.user = request.session.get('selected_client') # 'user_client' before
+                session_sheet.save()
+                return redirect('admin_prev_client_sessions')
+        elif 'submit_location_session' in request.POST:
+            location_session_form = LocationSheetForm(request.POST, locations_queryset=locations)
+            if location_session_form.is_valid():
+                location_session_sheet = location_session_form.save(commit=False)
+                location_session_sheet.save()
+                return redirect('admin_prev_client_sessions')
+        else:
+            client_session_form = SessionSheetForm(clients_queryset=clients)
+            location_session_form = LocationSheetForm(locations_queryset=locations)
 
     return render(request, 'admin_new_session_sheet.html', {
-        'form': form,
+        'client_session_form': client_session_form,
+        'location_session_form': location_session_form,
         'selected_client': user_client
     })
 
@@ -189,41 +202,76 @@ def view_prevs_as_admin(request):
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
 
-    # Get the USER-CLIENT from session (account owner)
-    user_client_id = selected_client_id #request.session.get('selected_client')
-    if not user_client_id:
-        raise Http404("No client selected.")
+### added location view stuff follows ###
+    view_type = request.GET.get('view_type', 'client')
+    if view_type == 'client':
 
-    user_client = Client.objects.get(id=user_client_id)
+        # Get the USER-CLIENT from session (account owner)
+        user_client_id = selected_client_id #request.session.get('selected_client')
+        if not user_client_id:
+            raise Http404("No client selected.")
 
-    # All clients on this account (user + secondary)
-    clients = Client.objects.filter(profile=user_client.profile)
+        user_client = Client.objects.get(id=user_client_id)
 
-    # Base queryset: ALL sessions for this profile
-    session_sheets = Session_Sheet.objects.filter(
-        client__profile=user_client.profile
-    )
+        # All clients on this account (user + secondary)
+        clients = Client.objects.filter(profile=user_client.profile)
 
-    # Filters
-    client_filter = request.GET.get('client')
-    date_filter = request.GET.get('date')
+        # Base queryset: ALL sessions for this profile
+        session_sheets = Session_Sheet.objects.filter(
+            client__profile=user_client.profile
+        )
 
-    if client_filter:
-        session_sheets = session_sheets.filter(client_id=client_filter)
+        # Filters
+        client_filter = request.GET.get('client')
+        date_filter = request.GET.get('date')
+        if client_filter:
+            session_sheets = session_sheets.filter(client_id=client_filter)
+        if date_filter:
+            session_sheets = session_sheets.filter(date=date_filter)
 
-    if date_filter:
-        session_sheets = session_sheets.filter(date=date_filter)
+        session_sheets = session_sheets.order_by('-date')
 
-    session_sheets = session_sheets.order_by('-date')
+        context = {
+            'selected_client': selected_client,
+            'user_client': user_client,           # account owner
+            'clients': clients,                   # dropdown list
+            'session_sheets': session_sheets,
+            'client_filter': int(client_filter) if client_filter else None,
+            'date_filter': date_filter,
+            'view_type': view_type,
+        }
 
-    context = {
-        'selected_client': selected_client,
-        'user_client': user_client,           # account owner
-        'clients': clients,                   # dropdown list
-        'session_sheets': session_sheets,
-        'client_filter': int(client_filter) if client_filter else None,
-        'date_filter': date_filter,
-    }
+    elif view_type == 'location':
+        user_client_id = selected_client_id #request.session.get('selected_client')
+        if not user_client_id:
+            raise Http404("No client selected.")
+
+        user_client = Client.objects.get(id=user_client_id)
+
+        locations = Location.objects.filter(profile=user_client.profile)
+
+        location_session_sheets = Location_Sheet.objects.filter(
+            address__profile=user_client.profile
+        )
+
+        location_filter = request.GET.get('location')
+        date_filter = request.GET.get('date')
+        if location_filter:
+            location_session_sheets = location_session_sheets.filter(address_id=location_filter)
+        if date_filter:
+            location_session_sheets = location_session_sheets.filter(date=date_filter)
+
+        location_session_sheets = location_session_sheets.order_by('-date')
+
+        context = {
+            'selected_client': selected_client,
+            'user_client': user_client,
+            'locations': locations,
+            'location_session_sheets': location_session_sheets,
+            'location_filter': int(location_filter) if location_filter else None,
+            'date_filter': date_filter,
+            'view_type': view_type,
+        }
 
     return render(request, 'admin_prev_client_sessions.html', context)
 

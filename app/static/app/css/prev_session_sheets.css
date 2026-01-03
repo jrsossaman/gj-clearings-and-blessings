@@ -1,50 +1,23 @@
+.session-sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    margin-top: 10px;
+}
+
 .grid-header,
 .session-sheet-row {
     display: grid;
-    grid-template-columns: repeat(20, 1fr); /* 19 columns for your data */
     text-align: center;
     font-weight: bold;
     gap: 5px;
-    border-bottom: 1px solid #ddd;
 }
 
 .session-sheet-row {
     font-weight: normal;
 }
 
-
-/*
-.session-sheet-grid {
-    display: grid;
-    grid-template-columns: repeat(21, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-    border: 1px solid #ddd
-}
-
-.grid-header {
-    display: contents;
-    font-weight: bold;
-    text-align: center;
-    padding: 10px;
-}
-
-.session-sheet-grid > div {
-    padding: 10px;
-    border: 1px;
-    text-align: center;
-}
-
-.session-sheet-grid .session-sheet-row div {
-    font-size: 20px;
-}
-
-.session-sheet-grid .session-sheet-row div:nth-child(6),
-.session-sheet-grid .session-sheet-row div:nth-child(7),
-.session-sheet-grid .session-sheet-row div:nth-child(8),
-.session-sheet-grid .session-sheet-row div:nth-child(9),
-.session-sheet-grid .session-sheet-row div:nth-child(10),
-.session-sheet-grid .session-sheet-row div:nth-child(11),
-.session-sheet-grid .session-sheet-row div:nth-child(12) {
-    font-weight: bold;
+.session-sheet-notes {
+    grid-column: 1 / -1;
+    text-align: left;
+    border-bottom: 5px solid #ddd;
 }

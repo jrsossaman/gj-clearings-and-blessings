@@ -1,12 +1,24 @@
 {% extends "admin_dashboard.html" %}
 
 {% block content %}
-    <h2>Create a new Session Sheet for {{ selected_client.first_name }} {{selected_client.last_name }}'s Account</h2>
+    <h3>Create a new Client or Location Session Sheet for {{ selected_client.first_name }} {{selected_client.last_name }}'s Account</h3>
     
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create Session Sheet</button>
-    </form>
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            <label style="font-weight: bold">Create a new Client Session.
+                {{ client_session_form.as_p }}
+                <button type="submit" name="submit_client_session">Create Client Session Sheet</button>
+            </label>
+        </form>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label style="font-weight: bold">Create a new Location Session.
+                {{ location_session_form.as_p }}
+                <button type="submit" name="submit_location_session">Create Location Session Sheet
+            </label>
+        </form>
+    </div>
 
 {% endblock %}

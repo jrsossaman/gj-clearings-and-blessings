@@ -113,7 +113,8 @@ class SessionSheetForm(ModelForm):
             'spiritual1', 'mental1', 'emotional1', 'physical1',
             'chakras', 'cords', 'hinderances', 'dark_entities', 'attacks',
             'social', 'viruses',
-            'spiritual2', 'mental2', 'emotional2', 'physical2'
+            'spiritual2', 'mental2', 'emotional2', 'physical2',
+            'notes'
         ]
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
@@ -140,8 +141,8 @@ class LocationSheetForm(ModelForm):
             'date': forms.DateInput(attrs={"type": "date"}),
         }
 
-        def __init__(self, *args, **kwargs):
-            locations_queryset = kwargs.pop('locations_queryset', None)
-            super().__init__(*args, **kwargs)
-            if locations_queryset is not None:
-                self.fields['address'].queryset = locations_queryset
+    def __init__(self, *args, **kwargs):
+        locations_queryset = kwargs.pop('locations_queryset', None)
+        super().__init__(*args, **kwargs)
+        if locations_queryset is not None:
+            self.fields['address'].queryset = locations_queryset
