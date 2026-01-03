@@ -62,7 +62,7 @@ class Location(models.Model):
     country=models.CharField(max_length=50, null=True)
 
     def __str__(self):
-        return f"{self.street} {self.street_ext} {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
+        return f"{self.street}, {self.street_ext}, {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
     
     # Do I need a save() method?
 
@@ -99,6 +99,8 @@ class Session_Sheet(models.Model):
     physical2=models.IntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(100)])
     
+#    notes=models.TextField()
+    
     @property
     def total1(self):
         return self.spiritual1 + self.mental1 + self.emotional1 + self.physical1
@@ -113,3 +115,17 @@ class Session_Sheet(models.Model):
             return None
         return ((self.total1 - self.total2) / self.total1) * 100
     
+
+
+class Location_Sheet(models.Model):
+    address=models.ForeignKey(Location, on_delete=models.CASCADE)
+
+    date=models.DateField()
+
+    issues=models.BooleanField(default=False)
+    unwanted_energies=models.BooleanField(default=False)
+    stuck_souls=models.BooleanField(default=False)
+    portals=models.BooleanField(default=False)
+    protection=models.BooleanField(default=False)
+
+    notes=models.TextField(null=True, blank=True)

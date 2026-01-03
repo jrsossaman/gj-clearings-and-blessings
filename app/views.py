@@ -62,6 +62,7 @@ def is_admin(user):
     return user.is_staff
 
 
+
 User = get_user_model()
 @login_required
 @user_passes_test(is_admin)
@@ -105,6 +106,7 @@ def admin_user_creation(request):
         user_form = UserCreationForm()    
     
     return render(request, 'admin_create_user.html', {"client_form": client_form, "user_form": user_form})
+
 
 
 @login_required
@@ -176,7 +178,6 @@ def create_session_sheet(request):
         'form': form,
         'selected_client': user_client
     })
-
 
 
 

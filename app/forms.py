@@ -74,15 +74,15 @@ class AdditionalClientCreationForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['first_name', 'last_name']
-    first_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
-        'placeholder': 'First Name'
-    }))
-    last_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
-        'placeholder': 'Last Name'
-    }))
-    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={
-        'placeholder': 'Email (optional)'
-    }))
+#    first_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
+#        'placeholder': 'First Name'
+#    }))
+#    last_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
+#        'placeholder': 'Last Name'
+#    }))
+#    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={
+#        'placeholder': 'Email (optional)'
+#    }))
 
 
 
@@ -124,3 +124,24 @@ class SessionSheetForm(ModelForm):
         super().__init__(*args, **kwargs)
         if clients_queryset is not None:
             self.fields['client'].queryset = clients_queryset
+
+
+
+class LocationSheetForm(ModelForm):
+    class Meta:
+        model = Location_Sheet
+        fields = [
+            'address', 'date',
+            'issues', 'unwanted_energies',
+            'stuck_souls', 'portals', 'protection',
+            'notes'
+        ]
+        widgets = {
+            'date': forms.DateInput(attrs={"type": "date"}),
+        }
+
+        def __init__(self, *args, **kwargs):
+            locations_queryset = kwargs.pop('locations_queryset', None)
+            super().__init__(*args, **kwargs)
+            if locations_queryset is not None:
+                self.fields['address'].queryset = locations_queryset
