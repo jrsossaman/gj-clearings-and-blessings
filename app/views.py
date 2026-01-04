@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db import transaction
 from django.http import HttpResponse, Http404
 from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login
@@ -202,26 +203,21 @@ def view_prevs_as_admin(request):
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
 
-### added location view stuff follows ###
     view_type = request.GET.get('view_type', 'client')
     if view_type == 'client':
 
-        # Get the USER-CLIENT from session (account owner)
-        user_client_id = selected_client_id #request.session.get('selected_client')
+        user_client_id = selected_client_id
         if not user_client_id:
             raise Http404("No client selected.")
 
         user_client = Client.objects.get(id=user_client_id)
 
-        # All clients on this account (user + secondary)
         clients = Client.objects.filter(profile=user_client.profile)
 
-        # Base queryset: ALL sessions for this profile
         session_sheets = Session_Sheet.objects.filter(
             client__profile=user_client.profile
         )
 
-        # Filters
         client_filter = request.GET.get('client')
         date_filter = request.GET.get('date')
         if client_filter:
@@ -233,8 +229,8 @@ def view_prevs_as_admin(request):
 
         context = {
             'selected_client': selected_client,
-            'user_client': user_client,           # account owner
-            'clients': clients,                   # dropdown list
+            'user_client': user_client,           
+            'clients': clients,                   
             'session_sheets': session_sheets,
             'client_filter': int(client_filter) if client_filter else None,
             'date_filter': date_filter,
@@ -242,7 +238,7 @@ def view_prevs_as_admin(request):
         }
 
     elif view_type == 'location':
-        user_client_id = selected_client_id #request.session.get('selected_client')
+        user_client_id = selected_client_id 
         if not user_client_id:
             raise Http404("No client selected.")
 
@@ -318,40 +314,53 @@ def delete_user_profile(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client', None)
     if selected_client_id:
-        if selected_client_id:
-            try:
-                selected_client = Client.objects.get(id=selected_client_id)
-            except Client.DoesNotExist:
-                request.session['selected_client'] = None
+        selected_client = Client.objects.get(id=selected_client_id)
 
     form = ConfirmPasswordForm()
 
-    if request.method == "POST":
-        form = ConfirmPasswordForm(request.POST)
+    profile = selected_client.profile
+    user = User.objects.get(profile=profile)
 
-        if not selected_client:
-            messages.error(request, "Client no longer exists or was already deleted.")
-            return redirect('admin_dashboard')
-    
-        if form.is_valid():
-            password = form.cleaned_data['password']
-            admin_user = request.user
-            if admin_user.check_password(password):
-                if selected_client.is_user:
+    if selected_client.is_user == True:
+        if request.method == "POST":
+            form = ConfirmPasswordForm(request.POST)
+
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                authenticated_user = authenticate(username=request.user.username, password=password)
+
+                if authenticated_user is not None:
+                                        
                     try:
-                        user_to_delete = User.objects.get(client=selected_client)
-                        user_to_delete.delete()
-                    except User.DoesNotExist:
-                        messages.error(request, "Something went wrong.")
-                else:
-                    messages.error(request, "Not a User.")
-            else:
-                messages.error(request, f"Incorrect password.")
+                        with transaction.atomic():
+                            selected_client.session_sheets.all().delete()
+                            for location in selected_client.profile.locations.all():
+                                location.location_sheets.all().delete()
+                            print("location sheets deleted")
+                            selected_client.delete()
+                            print("selected_client deleted")
+                            profile.locations.all().delete()
+                            print("locations deleted")
+                            profile.clients.all().delete()
+                            print("clients deleted")
+                            profile.delete()
+                            print("profile deleted")
+                            user.delete()
+                            print("user deleted")
 
-            selected_client.delete()
-            messages.success(request, f"{selected_client.first_name} {selected_client.last_name}'s account has been permanently deleted.")
-            request.session['selected_client'] = None
-            return redirect('admin_dashboard')
+                            messages.success(request, f"{selected_client.first_name} {selected_client.last_name}'s account has been permanently deleted.")
+                            return redirect('admin_dashboard')
+                    except Exception as e:
+#                        transaction.set_rollback(True)
+                        messages.error(request, f"An error occurred deleting {selected_client.first_name} {selected_client.last_name}. Please try again.")
+                        return redirect('admin_client_overview')
+                else:
+                    messages.error(request, "Incorrect password.")
+                    return redirect('admin_delete_user_profile')
+            
+            else:
+                messages.error(request, "Please enter a valid password.")
+
         else:
             form = ConfirmPasswordForm()
 

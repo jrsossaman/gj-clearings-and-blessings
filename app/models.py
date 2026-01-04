@@ -64,12 +64,10 @@ class Location(models.Model):
     def __str__(self):
         return f"{self.street}, {self.street_ext}, {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
     
-    # Do I need a save() method?
-
         
 
 class Session_Sheet(models.Model):
-    client=models.ForeignKey(Client, on_delete=models.CASCADE)
+    client=models.ForeignKey(Client, on_delete=models.CASCADE, related_name="session_sheets")
 
     date=models.DateField()
 
@@ -118,7 +116,7 @@ class Session_Sheet(models.Model):
 
 
 class Location_Sheet(models.Model):
-    address=models.ForeignKey(Location, on_delete=models.CASCADE)
+    address=models.ForeignKey(Location, on_delete=models.CASCADE, related_name="location_sheets")
 
     date=models.DateField()
 
