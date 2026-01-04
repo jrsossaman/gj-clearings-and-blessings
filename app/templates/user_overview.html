@@ -1,0 +1,25 @@
+{% extends 'user_profile.html' %}
+
+{% block content %}
+
+    <h3>Account Overview</h3>
+
+    <h4>Clients on your account:</h4>
+    <ul>
+        {% for client in clients %}
+            <li>{{ client }}</li>
+        {% empty %}
+            <li>No clients found.</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Locations on your account:</h4>
+    <ul>
+        {% for location in locations %}
+            <li>{{ location }}</li>
+        {% empty %}
+            <li>No locations found.</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

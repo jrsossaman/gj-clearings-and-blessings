@@ -17,7 +17,10 @@
 
         <a href="{% url 'reset_client_selection' %}">Select Primary Client</a>
         <a href="{% url 'admin_create_user' %}">Create New Account</a>
-        <button type="submit">Logout</button>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
     </header>
 
 

@@ -40,6 +40,8 @@ urlpatterns = [
     # End Password Reset Flow.
 
     path("profile/", app.views.profile_view, name='profile'),
+    path("user_overview/", app.views.user_overview, name='user_overview'),
+    path("user_prev_sessions/", app.views.user_prev_sessions, name='user_prev_sessions'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path("admin/", admin.site.urls),
 ]

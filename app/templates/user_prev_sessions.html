@@ -1,0 +1,234 @@
+{% extends "user_profile.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/prev_session_sheets.css' %}">
+<link rel="stylesheet" href="{% static 'app/css/prev_location_sheets.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<form method="get" id="viewTypeForm" style="margin-bottom: 20px; margin-top: 25px">
+    <label for="view_type">You can view sessions by Clients or Locations.
+        <select name="view_type" id="view-type" onchange="document.getElementById('viewTypeForm').submit();">
+            <option value="client" {% if view_type == 'client' %}selected{% endif %}>Clients</option>
+            <option value="location" {% if view_type == 'location' %}selected{% endif %}>Location</option>
+        </select>
+    </label>
+</form>
+
+{% if view_type == 'client' %}
+
+    <h3>Previous Client Session Sheets for your account:</h3>
+
+    <form method="get" style="margin-bottom: 20px">
+        <label for="client">Select client:</label>
+        <select name="client" id="client" required>
+            <option value="">-- Choose client --</option>
+            {% for client in clients %}
+                <option value="{{ client.id }}">{% if client.id == client_filter %}selected{% endif %}
+                    {{ client.first_name }} {{ client.last_name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="date">Select date:</label>
+        <input type="date" name="date" id="date" value="{{ date_filter }}">
+
+        <button type="submit">Filter</button>
+    </form>
+
+    {% if session_sheets %}
+        {% for sheet in session_sheets %}
+        <div class="session-sheet-grid">
+            <div class="grid-header">
+                <div>Client Name</div>
+                <div>Date</div>
+                <div>S1</div>
+                <div>M1</div>
+                <div>E1</div>
+                <div>P1</div>
+                <div>Total 1</div>
+                <div>Chakras</div>
+                <div>Cords</div>
+                <div>Hinderances</div>
+                <div>Dark Entities</div>
+                <div>Attacks</div>
+                <div>Social</div>
+                <div>Viruses</div>
+                <div>S2</div>
+                <div>M2</div>
+                <div>E2</div>
+                <div>P2</div>
+                <div>Total 2</div>
+                <div>Percent Change</div>
+            </div>
+
+            <div class="session-sheet-row">
+                <div>{{ sheet.client }}</div>
+                <div>{{ sheet.date }}</div>
+                <div>{{ sheet.spiritual1 }}</div>
+                <div>{{ sheet.mental1 }}</div>
+                <div>{{ sheet.emotional1 }}</div>
+                <div>{{ sheet.physical1 }}</div>
+                <div>{{ sheet.total1 }}</div>
+                <div>
+                    {% if sheet.chakras %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.cords %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.hinderances %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.dark_entities %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.attacks %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.social %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.viruses %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>{{ sheet.spiritual2 }}</div>
+                <div>{{ sheet.mental2 }}</div>
+                <div>{{ sheet.emotional2 }}</div>
+                <div>{{ sheet.physical2 }}</div>
+                <div>{{ sheet.total2 }}</div>
+                <div>{{ sheet.percent_change }}</div>
+            </div>
+
+            <div class="session-sheet-notes" style="margin-bottom: 50px; margin-top: 5px">
+                <strong>Notes:   </strong>
+                {{ sheet.notes|default:"No notes provided." }}
+            </div>
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No session sheets were found.</p>
+    {% endif %}
+
+
+{% elif view_type == 'location' %}
+
+    <h3>Previous Location Session Sheets for your account:</h3>
+
+    <form method="get" style="margin-bottom: 20px">
+
+        <input type="hidden" name="view_type" value="{{ view_type }}"> {% comment %}  New line.  {% endcomment %}
+
+        <label for="location">Select Location:</label>
+        <select name="location" id="location" required>
+            <option value="">-- Choose location --</option>
+            {% for location in locations %}
+                <option value="{{ location.id }}">{% if location.id == location_filter %}selected{% endif %}
+                    {{ location }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="date">Select date:</label>
+        <input type="date" name="date" id="date" value="{{ date_filter }}">
+
+        <button type="submit">Filter</button>
+    </form>
+
+    {% if location_session_sheets %}
+        {% for sheet in location_session_sheets %}
+        <div class="location-sheet-grid">
+            <div class="location-grid-header">
+                <div>Date</div>
+                <div>Address</div>
+                <div>Any Issues</div>
+                <div>Unwanted Energies</div>
+                <div>Stuck Souls</div>
+                <div>Portals</div>
+                <div>Protection</div>
+            </div>
+
+            <div class="location-sheet-row">
+                <div>{{ sheet.date }}</div>
+                <div>{{ sheet.address }}</div>
+                <div>
+                    {% if sheet.issues %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.unwanted_energies %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.stuck_souls %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.portals %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+                <div>
+                    {% if sheet.protection %}
+                        &#10004
+                    {% else %}
+                        &#10008
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="location-sheet-notes"> {% comment %} style="margin-bottom: 50px; margin-top: 5px" {% endcomment %}
+                <strong>Notes:</strong>
+                {{ sheet.notes|default:"No notes were found." }}
+            </div>
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No session sheets were found.</p>
+    {% endif %}
+
+{% endif %}     
+
+{% endblock %}

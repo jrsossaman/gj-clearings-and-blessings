@@ -40,7 +40,113 @@ def handle_login(request):
 @login_required
 def profile_view(request):
     profile = request.user.profile
-    return render(request, "user_profile.html", {"profile": profile})
+    primary_client = profile.primary_client if profile.primary_client else None
+
+    return render(request, "user_profile.html", {"profile": profile,
+                                                 "primary_client_first_name": primary_client.first_name if primary_client else None,
+                                                 "primary_client_last_name": primary_client.last_name if primary_client.last_name else None,
+                                                 })
+
+
+
+@login_required
+def user_overview(request):
+    profile = request.user.profile
+    primary_client = profile.primary_client if profile.primary_client else None
+
+    if primary_client:
+        user_client = Client.objects.get(profile=primary_client.profile)
+
+        clients = Client.objects.filter(profile=user_client.profile)
+        locations = Location.objects.filter(profile=user_client.profile)
+
+        context = {
+            'user_client': user_client,
+            'clients': clients,
+            'locations': locations,
+            'primary_client_first_name': primary_client.first_name,
+            'primary_client_last_name': primary_client.last_name,
+        }
+    else:
+        context = {
+            'error': "No primary client found for your profile.",
+        }
+
+    return render(request, 'user_overview.html', context)
+
+
+
+@login_required
+def user_prev_sessions(request):
+    profile = request.user.profile
+    primary_client = profile.primary_client if profile.primary_client else None
+
+    view_type = request.GET.get('view_type', 'client')
+    if view_type == 'client':
+        # Get the user's client ID from the primary client (no need for selected_client_id)
+        user_client = primary_client
+        
+        # Fetch all clients associated with the same profile
+        clients = Client.objects.filter(profile=user_client.profile)
+
+        # Fetch session sheets related to the primary client's profile
+        session_sheets = Session_Sheet.objects.filter(client__profile=user_client.profile)
+
+        # Apply filters (if any) for client and date
+        client_filter = request.GET.get('client')
+        date_filter = request.GET.get('date')
+
+        if client_filter:
+            session_sheets = session_sheets.filter(client_id=client_filter)
+        if date_filter:
+            session_sheets = session_sheets.filter(date=date_filter)
+
+        # Order session sheets by date (latest first)
+        session_sheets = session_sheets.order_by('-date')
+
+        context = {
+            'user_client': user_client,
+            'clients': clients,
+            'session_sheets': session_sheets,
+            'client_filter': int(client_filter) if client_filter else None,
+            'date_filter': date_filter,
+            'view_type': view_type,
+            'primary_client': primary_client,
+            'primary_client_first_name': primary_client.first_name if primary_client else None,
+            'primary_client_last_name': primary_client.last_name if primary_client else None,
+        }
+    
+    elif view_type == 'location':
+        # Use the primary client's profile to get related locations
+        locations = Location.objects.filter(profile=primary_client.profile)
+
+        # Fetch session sheets for the locations related to the primary client's profile
+        location_session_sheets = Location_Sheet.objects.filter(address__profile=primary_client.profile)
+
+        # Apply filters (if any) for location and date
+        location_filter = request.GET.get('location')
+        date_filter = request.GET.get('date')
+
+        if location_filter:
+            location_session_sheets = location_session_sheets.filter(address_id=location_filter)
+        if date_filter:
+            location_session_sheets = location_session_sheets.filter(date=date_filter)
+
+        # Order location session sheets by date (latest first)
+        location_session_sheets = location_session_sheets.order_by('-date')
+
+        context = {
+            'locations': locations,
+            'location_session_sheets': location_session_sheets,
+            'location_filter': int(location_filter) if location_filter else None,
+            'date_filter': date_filter,
+            'view_type': view_type,
+            'primary_client': primary_client,
+            'primary_client_first_name': primary_client.first_name if primary_client else None,
+            'primary_client_last_name': primary_client.last_name if primary_client else None,
+        }
+
+    return render(request, 'user_prev_sessions.html', context)
 
 
 ################################################################################################################
@@ -82,7 +188,7 @@ def admin_user_creation(request):
             profile = Profile.objects.create(user=user)
             profile.save()
 
-            client = client_form.save(commit=False)#Client.objects.create(profile=profile, first_name=None, last_name=None, email=user.email, is_user=True)
+            client = client_form.save(commit=False)
             client.profile = profile
             client.email = email
             if not profile.clients.exists():

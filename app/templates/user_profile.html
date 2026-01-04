@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app/css/prev_location_sheets.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/prev_session_sheets.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/update_forms.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center;">
@@ -12,11 +18,20 @@
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
         <button type="submit">Logout</button>
-    </form>
-    
+    </form>    
     </header>
 
-    <h2>Welcome, {{ request.user.email }}!</h2>
+    <main>
+        <div class="secondary_navbar">
+            <h3>Welcome, {{ primary_client_first_name }} {{ primary_client_last_name }}!</h3>
+            <a href="{% url 'user_overview' %}">Overview</a>
+            <a href="{% url 'user_prev_sessions' %}">Previous Sessions</a>
+        </div>
+
+        {% block content %}
+        {% endblock %}  
+    
+    </main>
 
 </body>
 </html>
