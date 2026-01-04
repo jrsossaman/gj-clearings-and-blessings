@@ -1,0 +1,27 @@
+{% extends 'admin_dashboard.html' %}
+{% load static %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+
+{% block content %}
+
+<h3>DELETE USER PROFILE</h3>
+
+{% if selected_client %}
+    <p>You are about to DELETE <strong>{{ selected_client.first_name }} {{ selected_client.last_name }}'s</strong> Account!</p>
+{% else %}
+    <p>No client selected.</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <label style="font-weight: bold">Enter password to confirm DELETE.
+        {{ form.as_p }}
+        <button type="submit">Confirm DELETE</button>
+    </label>
+</form>
+
+{% endblock %}

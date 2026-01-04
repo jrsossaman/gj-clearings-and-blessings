@@ -315,7 +315,47 @@ def update_client_account(request):
 @login_required
 @user_passes_test(is_admin)
 def delete_user_profile(request):
-    return render(request, 'admin_delete_user_profile.html')
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        if selected_client_id:
+            try:
+                selected_client = Client.objects.get(id=selected_client_id)
+            except Client.DoesNotExist:
+                request.session['selected_client'] = None
+
+    form = ConfirmPasswordForm()
+
+    if request.method == "POST":
+        form = ConfirmPasswordForm(request.POST)
+
+        if not selected_client:
+            messages.error(request, "Client no longer exists or was already deleted.")
+            return redirect('admin_dashboard')
+    
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            admin_user = request.user
+            if admin_user.check_password(password):
+                if selected_client.is_user:
+                    try:
+                        user_to_delete = User.objects.get(client=selected_client)
+                        user_to_delete.delete()
+                    except User.DoesNotExist:
+                        messages.error(request, "Something went wrong.")
+                else:
+                    messages.error(request, "Not a User.")
+            else:
+                messages.error(request, f"Incorrect password.")
+
+            selected_client.delete()
+            messages.success(request, f"{selected_client.first_name} {selected_client.last_name}'s account has been permanently deleted.")
+            request.session['selected_client'] = None
+            return redirect('admin_dashboard')
+        else:
+            form = ConfirmPasswordForm()
+
+    return render(request, 'admin_delete_user_profile.html', {'form': form, 'selected_client': selected_client})
 
 
 

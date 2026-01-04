@@ -146,3 +146,11 @@ class LocationSheetForm(ModelForm):
         super().__init__(*args, **kwargs)
         if locations_queryset is not None:
             self.fields['address'].queryset = locations_queryset
+
+
+
+class ConfirmPasswordForm(forms.Form):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Enter your password to confirm delete."
+    )

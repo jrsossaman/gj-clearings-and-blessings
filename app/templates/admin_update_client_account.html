@@ -13,7 +13,7 @@
     <form method="post">
         {% csrf_token %}
         <label style="font-weight: bold">Add a new client.
-            {{ client_session_form.as_p }}
+            {{ client_form.as_p }}
             <button type="submit" name="submit_client">Add Client</button>
         </label>
     </form>
@@ -21,7 +21,7 @@
     <form method="post">
         {% csrf_token %}
         <label style="font-weight: bold">Add a new location.
-            {{ location_session_form.as_p }} 
+            {{ location_form.as_p }} 
             <button type="submit" name="submit_location_form">Add Location</button>
         </label>
     </form>
