@@ -1,4 +1,33 @@
 .session-sheet-grid {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.session-grid-header,
+.session-sheet-row {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    text-align: center;
+    gap: 5px;
+}
+
+.session-grid-header {
+    font-weight: bold;
+}
+
+.session-sheet-row {
+    font-weight: normal;
+}
+
+.session-sheet-notes {
+    grid-column: 1 / -1;
+    text-align: left;
+    border-bottom: 5px solid #ddd;
+}
+
+/*
+.session-sheet-grid {
     display: grid;
     grid-template-columns: repeat(20, 1fr);
     margin-top: 10px;

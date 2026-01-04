@@ -55,12 +55,14 @@ def user_overview(request):
     primary_client = profile.primary_client if profile.primary_client else None
 
     if primary_client:
-        user_client = Client.objects.get(profile=primary_client.profile)
+        primary_client_id = request.user.id
+        user_client = Client.objects.get(id=primary_client_id)
 
         clients = Client.objects.filter(profile=user_client.profile)
         locations = Location.objects.filter(profile=user_client.profile)
 
         context = {
+            'profile': profile,
             'user_client': user_client,
             'clients': clients,
             'locations': locations,
@@ -83,16 +85,12 @@ def user_prev_sessions(request):
 
     view_type = request.GET.get('view_type', 'client')
     if view_type == 'client':
-        # Get the user's client ID from the primary client (no need for selected_client_id)
         user_client = primary_client
         
-        # Fetch all clients associated with the same profile
         clients = Client.objects.filter(profile=user_client.profile)
 
-        # Fetch session sheets related to the primary client's profile
         session_sheets = Session_Sheet.objects.filter(client__profile=user_client.profile)
 
-        # Apply filters (if any) for client and date
         client_filter = request.GET.get('client')
         date_filter = request.GET.get('date')
 
@@ -101,7 +99,6 @@ def user_prev_sessions(request):
         if date_filter:
             session_sheets = session_sheets.filter(date=date_filter)
 
-        # Order session sheets by date (latest first)
         session_sheets = session_sheets.order_by('-date')
 
         context = {
@@ -117,13 +114,10 @@ def user_prev_sessions(request):
         }
     
     elif view_type == 'location':
-        # Use the primary client's profile to get related locations
         locations = Location.objects.filter(profile=primary_client.profile)
 
-        # Fetch session sheets for the locations related to the primary client's profile
         location_session_sheets = Location_Sheet.objects.filter(address__profile=primary_client.profile)
 
-        # Apply filters (if any) for location and date
         location_filter = request.GET.get('location')
         date_filter = request.GET.get('date')
 
@@ -132,7 +126,6 @@ def user_prev_sessions(request):
         if date_filter:
             location_session_sheets = location_session_sheets.filter(date=date_filter)
 
-        # Order location session sheets by date (latest first)
         location_session_sheets = location_session_sheets.order_by('-date')
 
         context = {
