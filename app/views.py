@@ -19,8 +19,14 @@ def handle_login(request):
         if form.is_valid():
             email=form.cleaned_data["email"]
             password=form.cleaned_data["password"]
-
-            user = authenticate(request, username=email, password=password)
+            print(f"EMAIL: {email}")
+            print(f"PASSWORD: {password}")
+            user = ""
+            try:
+                user= authenticate(request, username=email, password=password)
+                print(user)
+            except Exception as ex:
+                print(ex)
 
             if user is not None:
                 login(request, user)
@@ -29,6 +35,7 @@ def handle_login(request):
                 else:
                     return redirect("profile")
             else:
+                print("Are you hitting this block?")
                 form.add_error(None, "Invalid email or password.")
 
     else:
@@ -56,7 +63,7 @@ def user_overview(request):
 
     if primary_client:
         primary_client_id = request.user.id
-        user_client = Client.objects.get(id=primary_client_id)
+        user_client = User.objects.get(id=primary_client_id)
 
         clients = Client.objects.filter(profile=user_client.profile)
         locations = Location.objects.filter(profile=user_client.profile)
