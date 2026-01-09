@@ -19,14 +19,8 @@ def handle_login(request):
         if form.is_valid():
             email=form.cleaned_data["email"]
             password=form.cleaned_data["password"]
-            print(f"EMAIL: {email}")
-            print(f"PASSWORD: {password}")
-            user = ""
-            try:
-                user= authenticate(request, username=email, password=password)
-                print(user)
-            except Exception as ex:
-                print(ex)
+
+            user = authenticate(request, username=email, password=password)
 
             if user is not None:
                 login(request, user)
@@ -35,7 +29,6 @@ def handle_login(request):
                 else:
                     return redirect("profile")
             else:
-                print("Are you hitting this block?")
                 form.add_error(None, "Invalid email or password.")
 
     else:
