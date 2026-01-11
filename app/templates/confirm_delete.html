@@ -1,0 +1,14 @@
+{% extends "admin_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<h3>Confirm Delete</h3>
+
+<p>Are you sure you want to delete <strong>{{ object }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class='delete-button'>Delete</button>
+    <a href="{% url 'admin_client_overview' %}" class='delete-button-cancel'>Cancel</a>
+</form>
+{% endblock %}

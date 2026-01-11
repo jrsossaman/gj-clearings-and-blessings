@@ -8,7 +8,7 @@
             {% csrf_token %}
             <label style="font-weight: bold">Create a new Client Session.
                 {{ client_session_form.as_p }}
-                <button type="submit" name="submit_client_session">Create Client Session Sheet</button>
+                <button type="submit" class='lesser-link' name="submit_client_session">Create Client Session Sheet</button>
             </label>
         </form>
 
@@ -16,7 +16,7 @@
             {% csrf_token %}
             <label style="font-weight: bold">Create a new Location Session.
                 {{ location_session_form.as_p }}
-                <button type="submit" name="submit_location_session">Create Location Session Sheet
+                <button type="submit" class='lesser-link' name="submit_location_session">Create Location Session Sheet</button>
             </label>
         </form>
     </div>

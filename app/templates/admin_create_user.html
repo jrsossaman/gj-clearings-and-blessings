@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create New User</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'app/css/base.css' %}">
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Grace Jaeger, Clearings and Blessings</h1>
+        <h1>Rev. Grace Evangeline, Clearings and Blessings</h1>
 
-        <a href="{% url 'admin_dashboard' %}">Select Primary Client</a>
-        <a href="{% url 'admin_create_user' %}">Create New Account</a>
+        <a href="{% url 'admin_dashboard' %}" class='button-link'>Select Primary Client</a>
+        <a href="{% url 'admin_create_user' %}" class='button-link'>Create New Account</a>
         <form action="{% url 'logout' %}" method="post">
             {% csrf_token %}
-            <button type="submit">Logout</button>
+            <button type="submit" class='button-link'>Logout</button>
         </form>
     </header>
     
@@ -21,7 +25,7 @@
         {% csrf_token %}
         {{ client_form.as_p }}
         {{ user_form.as_p }}
-        <button type="submit">
+        <button type="submit" class='lesser-link'>
             Create User
         </button>
     </form>

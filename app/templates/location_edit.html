@@ -1,0 +1,16 @@
+{% extends "admin_dashboard.html" %}
+
+{% block content %}
+
+<h3>Update Location Page</h3>
+
+<div>
+    <form method="post">
+    {% csrf_token %}
+    <label style="font-weight: bold">Edit this Location
+        {{ form.as_p }}
+        <button type="submit" name="confirm_edit">Confirm</button>
+    </label>
+</div>
+
+{% endblock  %}

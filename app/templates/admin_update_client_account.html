@@ -14,7 +14,7 @@
         {% csrf_token %}
         <label style="font-weight: bold">Add a new client.
             {{ client_form.as_p }}
-            <button type="submit" name="submit_client">Add Client</button>
+            <button type="submit" class='lesser-link' name="submit_client">Add Client</button>
         </label>
     </form>
 
@@ -22,7 +22,7 @@
         {% csrf_token %}
         <label style="font-weight: bold">Add a new location.
             {{ location_form.as_p }} 
-            <button type="submit" name="submit_location">Add Location</button>
+            <button type="submit" class='lesser-link' name="submit_location">Add Location</button>
         </label>
     </form>
 </div>

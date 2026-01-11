@@ -18,9 +18,9 @@
 
 <form method="post">
     {% csrf_token %}
-    <label style="font-weight: bold">Enter password to confirm DELETE.
+    <label>
         {{ form.as_p }}
-        <button type="submit">Confirm DELETE</button>
+        <button type="submit" class='delete-button'>CONFIRM DELETE</button>
     </label>
 </form>
 

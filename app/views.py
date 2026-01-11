@@ -235,6 +235,8 @@ def admin_dashboard(request):
 
 
 
+#####   Admin Overview and Client/Location Edit/Delete   #####
+
 @login_required
 @user_passes_test(is_admin)
 def admin_client_overview(request):
@@ -253,6 +255,87 @@ def admin_client_overview(request):
     return render(request, 'admin_client_overview.html', context)
 
 
+@login_required
+@user_passes_test(is_admin)
+def client_edit(request, pk):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    client = get_object_or_404(Client, pk=pk)
+
+    form = AdditionalClientCreationForm(instance=client)
+
+    if request.method == "POST":
+        form = AdditionalClientCreationForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_client_overview')
+        else:
+            form = AdditionalClientCreationForm(instance=client)
+
+    return render(request, "client_edit.html", {'form': form, 'selected_client': selected_client})
+
+
+@login_required
+@user_passes_test(is_admin)
+def client_delete(request, pk):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    client = get_object_or_404(Client, pk=pk)
+    if request.method == "POST":
+        client.delete()
+        return redirect('admin_client_overview')
+    
+    return render(request, "confirm_delete.html", {'object': client, 'selected_client': selected_client})
+
+
+@login_required
+@user_passes_test(is_admin)
+def location_edit(request, pk):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    location = get_object_or_404(Location, pk=pk)
+
+    form = LocationCreationForm(instance=location)
+
+    if request.method == 'POST':
+        form = LocationCreationForm(request.POST, instance=location)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_client_overview')
+    else:
+        form = LocationCreationForm(instance=location)
+
+    return render(request, "location_edit.html", {'form': form, 'selected_client': selected_client})
+
+
+@login_required
+@user_passes_test(is_admin)
+def location_delete(request, pk):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    location = get_object_or_404(Location, pk=pk)
+
+    if request.method == 'POST':
+        location.delete()
+        return redirect('admin_client_overview')
+
+    return render(request, "confirm_delete.html", {'object': location, 'selected_client': selected_client})
+
+
+
+#####   Create New Sessions   #####
 
 @login_required
 @user_passes_test(is_admin)

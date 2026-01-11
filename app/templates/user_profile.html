@@ -6,6 +6,8 @@
     <title>Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'app/css/base.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/prev_location_sheets.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/prev_session_sheets.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/update_forms.css' %}">
@@ -13,19 +15,19 @@
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Grace Jaeger, Clearings and Blessings</h1>
+        <h1>Rev. Grace Evangeline, Clearings and Blessings</h1>
 
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
-        <button type="submit">Logout</button>
+        <button type="submit" class='delete-button-cancel'>Logout</button>
     </form>    
     </header>
 
     <main>
         <div class="secondary_navbar">
             <h3>Welcome, {{ primary_client_first_name }} {{ primary_client_last_name }}!</h3>
-            <a href="{% url 'user_overview' %}">Overview</a>
-            <a href="{% url 'user_prev_sessions' %}">Previous Sessions</a>
+            <a href="{% url 'user_overview' %}" class='button-link'>Overview</a>
+            <a href="{% url 'user_prev_sessions' %}" class='button-link'>Previous Sessions</a>
         </div>
 
         {% block content %}

@@ -6,7 +6,11 @@
 <h4>Clients on this account:</h4>
 <ul>
     {% for client in clients %}
-        <li>{{ client }}</li>
+        <li>
+            {{ client }}
+            <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
+            <a href="{% url 'confirm_delete' client.id %}" class='lesser-link'>Delete</a>
+        </li>
     {% empty %}
         <li>No clients found.</li>
     {% endfor %}
@@ -15,7 +19,11 @@
 <h4>Locations</h4>
 <ul>
     {% for location in locations %}
-        <li>{{ location }}</li>
+        <li>
+            {{ location }}
+            <a href="{% url 'location_edit' location.id %}" class='lesser-link'>Edit</a>
+            <a href="{% url 'confirm_delete' location.id %}" class='lesser-link'>Delete</a>
+        </li>
     {% empty %}
         <li>No locations found.</li>
     {% endfor %}

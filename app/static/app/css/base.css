@@ -1,0 +1,163 @@
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 44px;
+    color: #efd07d;
+}
+
+body {
+    font-family: 'Gill Sans', cursive;
+    color: whitesmoke;/* #efd07d; */
+    
+
+    background-image:
+        radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        url("/static/app/images/gj_noback.png");
+    background-size: 4px 4px, 40%;
+    background-repeat: repeat, no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-color: black;
+
+    position: relative;
+    z-index: 0;
+}
+
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* black fade */
+    z-index: 0;
+    pointer-events: none;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+.button-link {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 5px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.button-link:hover {
+    background-color: orange;
+}
+
+
+
+.delete-button {
+    display: inline-block;
+    padding: 2px 10px;
+    padding-bottom: 6px;
+    margin: 2px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: red;
+}
+
+
+
+.delete-button-cancel {
+    display: inline-block;
+    padding: 2px 10px;
+    padding-bottom: 6px;
+    margin: 2px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+.delete-button-cancel:hover {
+    background-color: orange;
+}
+
+
+
+.lesser-link {
+    display: inline-block;
+    padding: 1px 6px;
+    margin: 2px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.lesser-link:hover {
+    background-color: orange;
+}
+
+/* ####### Begin Fuckery and Findoutery ####### */
+
+form input,
+form textarea,
+form select {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Gill Sans', sans-serif;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: orange;
+    outline: none;
+}
+
+
+/*
+.select2-container .select2-selection--single {
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Gill Sans', sans-serif;
+    height: auto;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.select2-container--focus .select2-selection--single {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: orange;
+    outline: none;
+}
+*/
