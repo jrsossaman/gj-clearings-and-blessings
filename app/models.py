@@ -62,7 +62,8 @@ class Location(models.Model):
     country=models.CharField(max_length=50, null=True)
 
     def __str__(self):
-        return f"{self.street}, {self.street_ext}, {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
+        street_ext = f", {self.street_ext}" if self.street_ext else ""
+        return f"{self.street} {street_ext}, {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
     
         
 
