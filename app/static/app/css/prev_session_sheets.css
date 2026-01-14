@@ -1,7 +1,9 @@
+
 .session-sheet-grid {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
+    border-radius: 6px; 
 }
 
 .session-grid-header,
@@ -25,6 +27,7 @@
     text-align: left;
     border-bottom: 5px solid #ddd;
 }
+
 
 /*
 .session-sheet-grid {

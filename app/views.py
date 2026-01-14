@@ -27,7 +27,7 @@ def handle_login(request):
                 if user.is_staff:
                     return redirect("admin_dashboard")
                 else:
-                    return redirect("profile")
+                    return redirect('user_overview') #("profile")
             else:
                 form.add_error(None, "Invalid email or password.")
 
@@ -213,22 +213,22 @@ def admin_user_creation(request):
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     selected_client = None
-    selected_client_id = request.session.get('selected_client')  # Get client ID from session
+    selected_client_id = request.session.get('selected_client')
 
     if selected_client_id:
         try:
-            selected_client = Client.objects.get(id=selected_client_id)  # Fetch the client object
+            selected_client = Client.objects.get(id=selected_client_id)
+            return redirect('admin_client_overview')
         except Client.DoesNotExist:
-            selected_client = None  # In case the client is deleted or invalid
+            selected_client = None
 
     if request.method == "POST":
         form = ClientSelectForm(request.POST)
         if form.is_valid():
             selected_client = form.cleaned_data["client"]
-            request.session['selected_client'] = selected_client.id  # Store client ID in session
-            return redirect('admin_dashboard')  # Reload to reflect the new selection
+            request.session['selected_client'] = selected_client.id
+            return redirect('admin_dashboard')
     else:
-        # If there's a selected client, initialize the form with that client object
         form = ClientSelectForm(initial={'client': selected_client}) if selected_client else ClientSelectForm()
 
     return render(request, "admin_dashboard.html", {"form": form, "selected_client": selected_client})
