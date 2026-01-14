@@ -112,7 +112,7 @@ class Session_Sheet(models.Model):
     def percent_change(self):
         if self.total1 == 0:
             return None
-        return ((self.total1 - self.total2) / self.total1) * 100
+        return (self.total1 / self.total2) * 100  #return ((self.total1 - self.total2) / self.total1) * 100
     
 
 

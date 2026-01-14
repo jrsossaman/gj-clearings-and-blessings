@@ -9,39 +9,14 @@
 .session-grid-header,
 .session-sheet-row {
     display: grid;
-    grid-template-columns: repeat(20, 1fr);
+    grid-template-columns: 2fr 2fr repeat(18, 1fr);
     text-align: center;
     gap: 5px;
+    width: 100%;
 }
 
 .session-grid-header {
     font-weight: bold;
-}
-
-.session-sheet-row {
-    font-weight: normal;
-}
-
-.session-sheet-notes {
-    grid-column: 1 / -1;
-    text-align: left;
-    border-bottom: 5px solid #ddd;
-}
-
-
-/*
-.session-sheet-grid {
-    display: grid;
-    grid-template-columns: repeat(20, 1fr);
-    margin-top: 10px;
-}
-
-.grid-header,
-.session-sheet-row {
-    display: grid;
-    text-align: center;
-    font-weight: bold;
-    gap: 5px;
 }
 
 .session-sheet-row {
