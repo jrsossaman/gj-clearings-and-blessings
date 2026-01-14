@@ -98,9 +98,6 @@ class ClientSelectForm(forms.Form):
         queryset=Client.objects.filter(is_user=True),
         empty_label="Select a client",
         required=True,
-#        widget=forms.Select(attrs={
-#            'class': 'select2' # was 'select2'
-#        })
     )
 
 

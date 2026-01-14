@@ -122,7 +122,7 @@ body > * {
     background-color: orange;
 }
 
-/* ####### Begin Fuckery and Findoutery ####### */
+
 
 form input,
 form textarea,
@@ -135,7 +135,6 @@ form select {
     transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-
 form input:focus,
 form textarea:focus,
 form select:focus {
@@ -143,22 +142,3 @@ form select:focus {
     border-color: orange;
     outline: none;
 }
-
-
-/*
-.select2-container .select2-selection--single {
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-family: 'Gill Sans', sans-serif;
-    height: auto;
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-.select2-container--focus .select2-selection--single {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: orange;
-    outline: none;
-}
-*/

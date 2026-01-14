@@ -27,8 +27,9 @@ urlpatterns = [
 
     path("admin_client_overview/", app.views.admin_client_overview, name='admin_client_overview'),
     path("client_edit/<int:pk>/", app.views.client_edit, name='client_edit'),
-    path("confirm_delete/<int:pk>/",app.views.client_delete, name='confirm_delete'),
+    path("client_delete/<int:pk>/",app.views.client_delete, name='client_delete'),
     path("location_edit/<int:pk>/", app.views.location_edit, name='location_edit'),
+    path("location_delete/<int:pk>/", app.views.location_delete, name='location_delete'),
 
     path("admin_new_session_sheet", app.views.create_session_sheet, name='admin_new_session_sheet'),
     path("admin_prev_client_sessions", app.views.view_prevs_as_admin, name='admin_prev_client_sessions'),

@@ -9,7 +9,7 @@
         <li>
             {{ client }}
             <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
-            <a href="{% url 'confirm_delete' client.id %}" class='lesser-link'>Delete</a>
+            <a href="{% url 'client_delete' client.id %}" class='lesser-link'>Delete</a>
         </li>
     {% empty %}
         <li>No clients found.</li>
@@ -22,7 +22,7 @@
         <li>
             {{ location }}
             <a href="{% url 'location_edit' location.id %}" class='lesser-link'>Edit</a>
-            <a href="{% url 'confirm_delete' location.id %}" class='lesser-link'>Delete</a>
+            <a href="{% url 'location_delete' location.id %}" class='lesser-link'>Delete</a>
         </li>
     {% empty %}
         <li>No locations found.</li>
