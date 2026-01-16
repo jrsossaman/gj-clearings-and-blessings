@@ -2,6 +2,8 @@ from django import forms
 from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+
 
 
 
@@ -52,8 +54,18 @@ class UserCreationForm(forms.Form):
 
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
-        
+
+        try:
+            validate_password(password)
+        except forms.ValidationError as e:
+            # Re-raise the ValidationError as a forms.ValidationError
+            # to be properly handled by the form
+            raise forms.ValidationError(e.messages)
         return cleaned_data
+
+
+        
+
     
 
 

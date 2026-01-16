@@ -9,7 +9,8 @@
     {% csrf_token %}
     <label style="font-weight: bold">Edit this Client
         {{ form.as_p }}
-        <button type="submit" name="confirm_edit">Confirm</button>
+        <button type="submit" class='lesser-link' name="confirm_edit">Confirm</button>
+        <a href="{% url 'admin_client_overview' %}" class='lesser-link-cancel'>Cancel</a>
     </label>
 </div>
 

@@ -60,6 +60,24 @@ body > * {
 
 
 
+.button-link-cancel {
+    display: inline-block;
+    padding: 3.5px 10px;
+    padding-top: 2.5px;
+    padding-bottom: 4.5px;
+    margin: 5px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+
+
 .delete-button {
     display: inline-block;
     padding: 2px 10px;
@@ -124,6 +142,23 @@ body > * {
 
 
 
+.lesser-link-cancel {
+    display: inline-block;
+    padding: 1px 8px;
+    margin: 2px;
+    background-color: #efd07d;
+    color: black;
+    text-decoration: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', cursive;
+    /* font-style: italic; */
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+
+
 form input,
 form textarea,
 form select {
@@ -141,4 +176,13 @@ form select:focus {
     background: rgba(255, 255, 255, 0.8);
     border-color: orange;
     outline: none;
+}
+
+
+ul.errorlist {
+    color: whitesmoke;            /* make text white */
+    font-family: 'Gill Sans', sans-serif;
+    padding: 5px 10px;
+    margin: 5px 0;
+    list-style-type: none;   /* remove bullets */
 }
