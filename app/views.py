@@ -30,9 +30,10 @@ def handle_login(request):
                     return redirect('user_overview') #("profile")
             else:
                 form.add_error(None, "Invalid email or password.")
-
     else:
         form = LoginForm()
+        
+    print("FORM ERRORS:", form.errors)
     return render(request, "login.html", {"form": form})
 
 
