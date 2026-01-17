@@ -8,8 +8,10 @@
     {% for client in clients %}
         <li>
             {{ client }}
-            <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
-            <a href="{% url 'client_delete' client.id %}" class='lesser-link'>Delete</a>
+            {% if not client.is_user %}
+                <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
+                <a href="{% url 'client_delete' client.id %}" class='lesser-link'>Delete</a>
+            {% endif %}
         </li>
     {% empty %}
         <li>No clients found.</li>

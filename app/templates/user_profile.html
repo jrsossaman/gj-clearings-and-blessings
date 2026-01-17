@@ -28,6 +28,7 @@
             <h3>Welcome, {{ primary_client_first_name }} {{ primary_client_last_name }}!</h3>
             <a href="{% url 'user_overview' %}" class='button-link'>Overview</a>
             <a href="{% url 'user_prev_sessions' %}" class='button-link'>Previous Sessions</a>
+            {% comment %}  <a href="{%url 'user_information' %}" class='button-link'>Information</a>  {% endcomment %}
         </div>
 
         {% block content %}

@@ -110,7 +110,7 @@ class Session_Sheet(models.Model):
     physical2=models.PositiveIntegerField(
         validators=[MaxValueValidator(100)])
     
-    notes=models.TextField(null=True)
+    notes=models.TextField(null=True, blank=True)
     
     @property
     def total1(self):

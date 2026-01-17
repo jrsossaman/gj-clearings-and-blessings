@@ -143,6 +143,12 @@ def user_prev_sessions(request):
     return render(request, 'user_prev_sessions.html', context)
 
 
+
+# @login_required
+# def user_information(request):
+#     return render(request, 'user_information.html')
+
+
 ################################################################################################################
 
 
