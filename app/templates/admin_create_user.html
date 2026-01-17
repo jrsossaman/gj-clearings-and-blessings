@@ -20,7 +20,45 @@
             <button type="submit" class='button-link'>Logout</button>
         </form>
     </header>
+
+    <form method="post">
+    {% csrf_token %}
+
+    {% for field in client_form %}
+        <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+        </p>
+    {% endfor %}
+
+    {% for field in user_form %}
+        <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+        </p>
+    {% endfor %}
+
+    {% if client_form.errors or user_form.errors %}
+        <div class="form-errors" style="color: red; margin-bottom: 1em;">
+            {% for field, errors in client_form.errors.items %}
+                {% for error in errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+
+            {% for field, errors in user_form.errors.items %}
+                {% for error in errors %}
+                    <p class='p-error'>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <button type="submit" class='lesser-link'>Create User</button>
+</form>
     
+
+    {% comment %}
     <form method="post">
         {% csrf_token %}
         {{ client_form.as_p }}
@@ -37,6 +75,7 @@
         {% endfor %}
     </ul>
     {% endif %}
+    {% endcomment %}
 
 
 </body>

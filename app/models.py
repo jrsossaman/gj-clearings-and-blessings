@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
 # Create your models here.
 
@@ -20,10 +20,22 @@ class Profile(models.Model):
     
 
 
+letters_only = RegexValidator(
+    regex=r'^[a-zA-Z ]+$',
+    message='This field may contain letters only.'
+)
+
+numbers_only = RegexValidator(
+    regex=r'^[0-9]+$',
+    message='This field may contain numbers only.'
+)
+    
+
+
 class Client(models.Model):
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="clients")
-    first_name=models.CharField(max_length=15, null=True)
-    last_name=models.CharField(max_length=20, null=True)
+    first_name=models.CharField(max_length=15, null=True, blank=True, validators=[letters_only])
+    last_name=models.CharField(max_length=20, null=True, blank=True, validators=[letters_only])
     email=models.EmailField(blank=True, null=True, unique=True)
     is_user=models.BooleanField(default=False, editable=False)
 
@@ -56,10 +68,10 @@ class Location(models.Model):
     )
     street=models.CharField(max_length=20, null=True)
     street_ext=models.CharField(max_length=10, null=True, blank=True)
-    city=models.CharField(max_length=20, null=True)
-    state=models.CharField(max_length=20, null=True)
-    zip_code=models.CharField(max_length=10, null=True)
-    country=models.CharField(max_length=50, null=True)
+    city=models.CharField(max_length=20, null=True, blank=True, validators=[letters_only])
+    state=models.CharField(max_length=20, null=True, validators=[letters_only])
+    zip_code=models.CharField(max_length=10, null=True, validators=[numbers_only])
+    country=models.CharField(max_length=50, null=True, validators=[letters_only])
 
     def __str__(self):
         street_ext = f", {self.street_ext}" if self.street_ext else ""

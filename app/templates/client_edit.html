@@ -2,8 +2,38 @@
 
 {% block content %}
 
-<h3>Update Client Page</h3>
+<h3>Edit Client</h3>
 
+<div>
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <span class="p-error" style="color:red; margin-left: 0.5em;">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                {% endif %}
+            </p>
+        {% endfor %}
+
+        <button type="submit" class="lesser-link" name="confirm_edit">
+            Confirm
+        </button>
+        <a href="{% url 'admin_client_overview' %}" class="lesser-link-cancel">
+            Cancel
+        </a>
+    </form>
+</div>
+
+
+{% comment %}
 <div>
     <form method="post">
     {% csrf_token %}
@@ -13,5 +43,6 @@
         <a href="{% url 'admin_client_overview' %}" class='lesser-link-cancel'>Cancel</a>
     </label>
 </div>
+{% endcomment %}
 
 {% endblock  %}

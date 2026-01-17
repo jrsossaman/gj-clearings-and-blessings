@@ -12,6 +12,53 @@
 <div class="form-container">
     <form method="post">
         {% csrf_token %}
+        <strong>Add a new client.</strong>
+
+        {% for field in client_form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <span class="p-error" style="color:red;">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </p>
+        {% endfor %}
+
+        <button type="submit" class="lesser-link" name="submit_client">
+            Add Client
+        </button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <strong>Add a new location.</strong>
+
+        {% for field in location_form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <span class="p-error" style="color:red;">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+            </p>
+        {% endfor %}
+
+        <button type="submit" class="lesser-link" name="submit_location">
+            Add Location
+        </button>
+    </form>
+</div>
+
+{% comment %}
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
         <label style="font-weight: bold">Add a new client.
             {{ client_form.as_p }}
             <button type="submit" class='lesser-link' name="submit_client">Add Client</button>
@@ -26,6 +73,7 @@
         </label>
     </form>
 </div>
+{% endcomment %}
 
 
 {% endblock %}

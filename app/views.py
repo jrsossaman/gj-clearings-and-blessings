@@ -272,8 +272,10 @@ def client_edit(request, pk):
         if form.is_valid():
             form.save()
             return redirect('admin_client_overview')
-        else:
-            form = AdditionalClientCreationForm(instance=client)
+    else:
+        form = AdditionalClientCreationForm(instance=client)
+
+    print("FORM ERRORS:", form.errors)
 
     return render(request, "client_edit.html", {'form': form, 'selected_client': selected_client})
 
