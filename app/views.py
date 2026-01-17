@@ -176,6 +176,10 @@ def admin_user_creation(request):
             password=user_form.cleaned_data["password"] # Delete this field for production. Will be handled by user.set_unusable_password() below.
 
             user = User.objects.create_user(username=email, email=email, password=password) # Delete password=password for production. Added here for testing.
+            if password:
+                user.set_password(password)
+            else:
+                user.set_unusable_password()
 #            user.set_unusable_password() # This will enable user-created passwords on password reset
             user.save()
 
@@ -204,8 +208,9 @@ def admin_user_creation(request):
 
     else:
         client_form = PrimaryClientCreationForm()
-        user_form = UserCreationForm()    
-    
+        user_form = UserCreationForm()
+
+    print(user_form.fields)    
     return render(request, 'admin_create_user.html', {"client_form": client_form, "user_form": user_form})
 
 
@@ -275,8 +280,6 @@ def client_edit(request, pk):
             return redirect('admin_client_overview')
     else:
         form = AdditionalClientCreationForm(instance=client)
-
-    print("FORM ERRORS:", form.errors)
 
     return render(request, "client_edit.html", {'form': form, 'selected_client': selected_client})
 

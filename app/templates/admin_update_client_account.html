@@ -10,7 +10,7 @@
 <h3>You can make updates to {{ selected_client.first_name }} {{ selected_client.last_name }}'s account.</h3>
 
 <div class="form-container">
-    <form method="post">
+    <form method="post" novalidate>
         {% csrf_token %}
         <strong>Add a new client.</strong>
 
@@ -32,7 +32,7 @@
         </button>
     </form>
 
-    <form method="post">
+    <form method="post" novalidate>
         {% csrf_token %}
         <strong>Add a new location.</strong>
 

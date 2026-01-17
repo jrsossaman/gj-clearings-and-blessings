@@ -42,10 +42,29 @@ class UserCreationForm(forms.Form):
     )
 
     def clean_email(self):
-        email = self.cleaned_data.get("email")
+        email = self.cleaned_data.get("email", "").strip()
+        if not email:
+            raise forms.ValidationError("Invalid email.")
         if User.objects.filter(username=email).exists():
             raise forms.ValidationError("A User with that email already exists.")
         return email
+    
+    def clean_password(self):
+        password = self.cleaned_data.get("password", "")
+        password = password.strip()
+        if not password:
+            raise forms.ValidationError("Invalid password.")
+        try:
+            validate_password(password)
+        except forms.ValidationError as e:
+            raise forms.ValidationError(e.messages)
+        return password
+    
+    def clean_confirm_password(self):
+        confirm_password = self.cleaned_data.get("confirm_password", "").strip()
+        if not confirm_password:
+            raise forms.ValidationError("Please confirm your password.")
+        return confirm_password
 
     def clean(self):
         cleaned_data = super().clean()
@@ -55,12 +74,6 @@ class UserCreationForm(forms.Form):
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
 
-        try:
-            validate_password(password)
-        except forms.ValidationError as e:
-            # Re-raise the ValidationError as a forms.ValidationError
-            # to be properly handled by the form
-            raise forms.ValidationError(e.messages)
         return cleaned_data
 
 

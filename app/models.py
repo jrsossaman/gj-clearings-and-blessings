@@ -34,8 +34,8 @@ numbers_only = RegexValidator(
 
 class Client(models.Model):
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="clients")
-    first_name=models.CharField(max_length=15, null=True, blank=True, validators=[letters_only])
-    last_name=models.CharField(max_length=20, null=True, blank=True, validators=[letters_only])
+    first_name=models.CharField(max_length=15, null=True, validators=[letters_only])
+    last_name=models.CharField(max_length=20, null=True, validators=[letters_only])
     email=models.EmailField(blank=True, null=True, unique=True)
     is_user=models.BooleanField(default=False, editable=False)
 
@@ -68,7 +68,7 @@ class Location(models.Model):
     )
     street=models.CharField(max_length=20, null=True)
     street_ext=models.CharField(max_length=10, null=True, blank=True)
-    city=models.CharField(max_length=20, null=True, blank=True, validators=[letters_only])
+    city=models.CharField(max_length=20, null=True, validators=[letters_only])
     state=models.CharField(max_length=20, null=True, validators=[letters_only])
     zip_code=models.CharField(max_length=10, null=True, validators=[numbers_only])
     country=models.CharField(max_length=50, null=True, validators=[letters_only])
@@ -84,14 +84,14 @@ class Session_Sheet(models.Model):
 
     date=models.DateField()
 
-    spiritual1=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    mental1=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    emotional1=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    physical1=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
+    spiritual1=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    mental1=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    emotional1=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    physical1=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
     
     chakras=models.BooleanField(default=False)
     cords=models.BooleanField(default=False)
@@ -101,14 +101,14 @@ class Session_Sheet(models.Model):
     social=models.BooleanField(default=False)
     viruses=models.BooleanField(default=False)
     
-    spiritual2=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    mental2=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    emotional2=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
-    physical2=models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
+    spiritual2=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    mental2=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    emotional2=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
+    physical2=models.PositiveIntegerField(
+        validators=[MaxValueValidator(100)])
     
     notes=models.TextField(null=True)
     

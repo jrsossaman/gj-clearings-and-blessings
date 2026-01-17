@@ -21,41 +21,59 @@
         </form>
     </header>
 
-    <form method="post">
-    {% csrf_token %}
+    <form method="post" novalidate>
+        {% csrf_token %}
 
-    {% for field in client_form %}
-        <p>
-            {{ field.label_tag }}<br>
-            {{ field }}
-        </p>
-    {% endfor %}
+        {% for field in client_form %}
+            {% if field %}
+                <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="error-list" style="color: red; margin: 5px 0 0 0; padding-left: 20px;">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endif %}
+        {% endfor %}
 
-    {% for field in user_form %}
-        <p>
-            {{ field.label_tag }}<br>
-            {{ field }}
-        </p>
-    {% endfor %}
+        {% for field in user_form %}
+            {% if field %}
+                <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="error-list" style="color: red; margin: 5px 0 0 0; padding-left: 20px;">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </p>
+            {% endif %}
+        {% endfor %}
 
-    {% if client_form.errors or user_form.errors %}
-        <div class="form-errors" style="color: red; margin-bottom: 1em;">
-            {% for field, errors in client_form.errors.items %}
-                {% for error in errors %}
-                    <p>{{ error }}</p>
+        {% if client_form.non_field_errors %}
+            <ul class="error-list" style="color: red; margin: 10px 0; padding-left: 20px;">
+                {% for error in client_form.non_field_errors %}
+                    <li>{{ error }}</li>
                 {% endfor %}
-            {% endfor %}
+            </ul>
+        {% endif %}
 
-            {% for field, errors in user_form.errors.items %}
-                {% for error in errors %}
-                    <p class='p-error'>{{ error }}</p>
+        <button type="submit" class='lesser-link'>Create User</button>
+
+        {% if user_form.non_field_errors %}
+            <ul class="error-list" style="color: red; margin: 10px 0; padding-left: 20px;">
+                {% for error in user_form.non_field_errors %}
+                    <li>{{ error }}</li>
                 {% endfor %}
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <button type="submit" class='lesser-link'>Create User</button>
-</form>
+            </ul>
+        {% endif %}
+    </form>
     
 
     {% comment %}
