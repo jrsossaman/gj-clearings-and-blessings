@@ -144,9 +144,9 @@ def user_prev_sessions(request):
 
 
 
-# @login_required
-# def user_information(request):
-#     return render(request, 'user_information.html')
+#@login_required
+#def user_information(request):
+#    return render(request, 'user_information.html')
 
 
 ################################################################################################################

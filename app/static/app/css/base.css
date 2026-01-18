@@ -16,6 +16,8 @@ body {
     background-size: 4px 4px, 40%;
     background-repeat: repeat, no-repeat;
     background-position: center center;
+    /* background-position-y: 90%;
+    background-position-x: 80%; */
     background-attachment: fixed;
     background-color: black;
 

@@ -15,7 +15,7 @@
 </head>
 <body>
     <header style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>Rev. Grace Evangeline, Clearings and Blessings</h1>
+        <h1>Rev. Grace Evangeline, Clearings & Blessings</h1>
 
     <form action="{% url 'logout' %}" method="post">
         {% csrf_token %}
@@ -28,7 +28,7 @@
             <h3>Welcome, {{ primary_client_first_name }} {{ primary_client_last_name }}!</h3>
             <a href="{% url 'user_overview' %}" class='button-link'>Overview</a>
             <a href="{% url 'user_prev_sessions' %}" class='button-link'>Previous Sessions</a>
-            {% comment %}  <a href="{%url 'user_information' %}" class='button-link'>Information</a>  {% endcomment %}
+            {% comment %} <a href="{%url 'user_information' %}" class='button-link'>Information</a> {% endcomment %}
         </div>
 
         {% block content %}
