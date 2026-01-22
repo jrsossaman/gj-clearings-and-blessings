@@ -33,9 +33,37 @@ numbers_only = RegexValidator(
 
 
 class Client(models.Model):
+    PERSON = "person"
+    PET = "pet"
+
+    SPECIES_TYPE_CHOICES = [
+        (PERSON, "Person"),
+        (PET, "Pet")
+    ]
+    
+    MALE = "male"
+    FEMALE = "female"
+
+    GENDER_TYPE_CHOICES = [
+        ("", "Select"),
+        (MALE, "Male"),
+        (FEMALE, "Female")
+    ]
+
     profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="clients")
     first_name=models.CharField(max_length=15, null=True, validators=[letters_only])
     last_name=models.CharField(max_length=20, null=True, validators=[letters_only])
+    person_or_pet=models.CharField(
+        max_length=20,
+        choices=SPECIES_TYPE_CHOICES,
+        default="person"
+    )
+    species=models.CharField(max_length=20, blank=True, null=True, validators=[letters_only])
+    gender=models.CharField(
+        max_length=20,
+        choices=GENDER_TYPE_CHOICES,
+        default=""
+    )
     email=models.EmailField(blank=True, null=True, unique=True)
     is_user=models.BooleanField(default=False, editable=False)
 
@@ -52,20 +80,8 @@ class Client(models.Model):
 
 
 class Location(models.Model):
-    RESIDENCE = "residence"
-    BUSINESS = "business"
-
-    LOCATION_TYPE_CHOICES = [
-        (RESIDENCE, "Residence"),
-        (BUSINESS, "Business")
-    ]
-
-    profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="locations")
-    location_type=models.CharField(
-        max_length=20,
-        choices=LOCATION_TYPE_CHOICES,
-        default=RESIDENCE
-    )
+    client=models.ForeignKey(Client, on_delete=models.CASCADE, related_name="locations_by_client", null=True, blank=True)
+    profile=models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="locations_by_profile", null=True, blank=True)
     street=models.CharField(max_length=20, null=True)
     street_ext=models.CharField(max_length=10, null=True, blank=True)
     city=models.CharField(max_length=20, null=True, validators=[letters_only])
@@ -75,40 +91,79 @@ class Location(models.Model):
 
     def __str__(self):
         street_ext = f", {self.street_ext}" if self.street_ext else ""
-        return f"{self.street} {street_ext}, {self.city}, {self.state} {self.zip_code} {self.country} ({self.location_type})"
+        return f"{self.street} {street_ext}, {self.city}, {self.state} {self.zip_code} {self.country}"
     
         
 
 class Session_Sheet(models.Model):
+    OPEN = "open"
+    CLOSED_TO_OPEN = "closed_to_open"
+    SEE_NOTES = "see_notes"
+
+    CHAKRAS_TYPE_CHOICES = [
+        (OPEN, "Open"),
+        (CLOSED_TO_OPEN, "Closed > Open"),
+        (SEE_NOTES, "See Notes"),
+    ]
+
+    DARK_ENTITIES = "dark_entities"
+    ATTACKS = "attacks"
+    SOCIETAL = "societal"
+    VIRUSES = "viruses"
+
+    HINDRANCE_TYPE_CHOICES = [
+        ("", "None, or select here."),
+        (DARK_ENTITIES, "Dark Entities"),
+        (ATTACKS, "Attacks"),
+        (SOCIETAL, "Societal"),
+        (VIRUSES, "Viruses")
+    ]
+
     client=models.ForeignKey(Client, on_delete=models.CASCADE, related_name="session_sheets")
 
     date=models.DateField()
 
     spiritual1=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     mental1=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     emotional1=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     physical1=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     
-    chakras=models.BooleanField(default=False)
+    chakras=models.CharField(
+        max_length=20,
+        choices=CHAKRAS_TYPE_CHOICES,
+        default="open"
+    )
     cords=models.BooleanField(default=False)
-    hinderances=models.BooleanField(default=False)
-    dark_entities=models.BooleanField(default=False)
-    attacks=models.BooleanField(default=False)
-    social=models.BooleanField(default=False)
-    viruses=models.BooleanField(default=False)
+    how_many=models.CharField(
+        max_length=10,
+        validators=[numbers_only],
+        blank=True,
+        null=True
+    )
+    to_whom=models.CharField(
+        max_length=999,
+        validators=[numbers_only],
+        blank=True,
+        null=True
+    )
+    hindrances=models.CharField(
+        max_length=20,
+        choices=HINDRANCE_TYPE_CHOICES,
+        default=""
+    )
     
     spiritual2=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     mental2=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     emotional2=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     physical2=models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(999999)])
     
     notes=models.TextField(null=True, blank=True)
     

@@ -99,22 +99,22 @@ class AdditionalClientCreationForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['first_name', 'last_name']
-#    first_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
-#        'placeholder': 'First Name'
-#    }))
-#    last_name = forms.CharField(max_length=20, required=True, widget=forms.TextInput(attrs={
-#        'placeholder': 'Last Name'
-#    }))
-#    email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={
-#        'placeholder': 'Email (optional)'
-#    }))
 
 
 
 class LocationCreationForm(forms.ModelForm):
     class Meta:
         model = Location
-        fields = ['location_type', 'street', 'street_ext', 'city', 'state', 'zip_code', 'country']
+        fields = ['client', 'street', 'street_ext', 'city', 'state', 'zip_code', 'country']
+
+    def __init__(self, *args, **kwargs):
+        profile=kwargs.pop('profile', None)
+        super().__init__(*args, **kwargs)
+
+        if profile:
+            self.fields['client'].queryset = Client.objects.filter(profile=profile)
+        else:
+            self.fields['client'].queryset = Client.objects.none()
     
 
 
@@ -133,8 +133,7 @@ class SessionSheetForm(ModelForm):
         fields = [
             'client', 'date',
             'spiritual1', 'mental1', 'emotional1', 'physical1',
-            'chakras', 'cords', 'hinderances', 'dark_entities', 'attacks',
-            'social', 'viruses',
+            'chakras', 'cords', 'how_many', 'to_whom', 'hindrances',
             'spiritual2', 'mental2', 'emotional2', 'physical2',
             'notes'
         ]

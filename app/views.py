@@ -474,9 +474,10 @@ def update_client_account(request):
     selected_client_id = request.session.get('selected_client', None)
     if selected_client_id:
         selected_client = Client.objects.get(id=selected_client_id)
+        profile=selected_client.profile
 
     client_form = AdditionalClientCreationForm()
-    location_form = LocationCreationForm()
+    location_form = LocationCreationForm(profile=profile)
 
     if request.method == "POST":
         if 'submit_client' in request.POST:
@@ -488,7 +489,7 @@ def update_client_account(request):
                 client.save()
                 return redirect('admin_client_overview')
         elif 'submit_location' in request.POST:
-            location_form = LocationCreationForm(request.POST)
+            location_form = LocationCreationForm(request.POST, profile=profile)
             if location_form.is_valid():
                 location = location_form.save(commit=False)
                 location.profile = selected_client.profile
@@ -498,7 +499,9 @@ def update_client_account(request):
             client_form = AdditionalClientCreationForm()
             location_form = LocationCreationForm()
 
-    return render(request, 'admin_update_client_account.html', {'client_form': client_form, 'location_form': location_form, 'selected_client': selected_client})
+    return render(request, 'admin_update_client_account.html', {'client_form': client_form,
+                                                                'location_form': location_form,
+                                                                'selected_client': selected_client})
 
 
 
