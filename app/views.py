@@ -606,12 +606,12 @@ def delete_user_profile(request):
                     try:
                         with transaction.atomic():
                             selected_client.session_sheets.all().delete()
-                            for location in selected_client.profile.locations.all():
+                            for location in selected_client.profile.locations_by_profile.all():
                                 location.location_sheets.all().delete()
                             print("location sheets deleted")
                             selected_client.delete()
                             print("selected_client deleted")
-                            profile.locations.all().delete()
+                            profile.locations_by_profile.all().delete()
                             print("locations deleted")
                             profile.clients.all().delete()
                             print("clients deleted")
@@ -624,6 +624,8 @@ def delete_user_profile(request):
                             return redirect('admin_dashboard')
                     except Exception as e:
 #                        transaction.set_rollback(True)
+                        print("this error: ", repr(e))
+                        raise
                         messages.error(request, f"An error occurred deleting {selected_client.first_name} {selected_client.last_name}. Please try again.")
                         return redirect('admin_client_overview')
                 else:
