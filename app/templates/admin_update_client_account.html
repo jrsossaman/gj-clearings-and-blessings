@@ -30,6 +30,29 @@
         <button type="submit" class="lesser-link" name="submit_client">
             Add Client
         </button>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var personOrPetField = document.getElementById('id_person_or_pet');
+                var speciesField = document.getElementById('id_species');
+                var genderField = document.getElementById('id_gender');
+                
+                function toggleFields() {
+                    if (personOrPetField.value === 'pet') {
+                        speciesField.parentElement.style.display = 'block';
+                        genderField.parentElement.style.display = 'block';
+                    } else {
+                        speciesField.parentElement.style.display = 'none';
+                        genderField.parentElement.style.display = 'none';
+                    }
+                }
+    
+                // Initial check in case there's an existing value
+                toggleFields();
+    
+                // Listen for changes to the 'person_or_pet' field
+                personOrPetField.addEventListener('change', toggleFields);
+            });
+        </script>
     </form>
 
     <form method="post" novalidate>

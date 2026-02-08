@@ -11,6 +11,8 @@
             {% if not client.is_user %}
                 <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
                 <a href="{% url 'client_delete' client.id %}" class='lesser-link'>Delete</a>
+            {% else %}
+                <a href="{% url 'client_edit' client.id %}" class='lesser-link'>Edit</a>
             {% endif %}
         </li>
     {% empty %}

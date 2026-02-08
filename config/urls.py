@@ -27,13 +27,15 @@ urlpatterns = [
 
     path("admin_client_overview/", app.views.admin_client_overview, name='admin_client_overview'),
     path("client_edit/<int:pk>/", app.views.client_edit, name='client_edit'),
-    path("client_delete/<int:pk>/",app.views.client_delete, name='client_delete'),
+    path("client_delete/<int:pk>/", app.views.client_delete, name='client_delete'),
     path("location_edit/<int:pk>/", app.views.location_edit, name='location_edit'),
     path("location_delete/<int:pk>/", app.views.location_delete, name='location_delete'),
 
     path("admin_new_session_sheet", app.views.create_session_sheet, name='admin_new_session_sheet'),
     path("admin_prev_client_sessions", app.views.view_prevs_as_admin, name='admin_prev_client_sessions'),
     path("admin_update_client_account", app.views.update_client_account, name='admin_update_client_account'),
+    path("admin_account_deactivate", app.views.account_deactivate, name='admin_account_deactivate'),
+    path("admin_account_reactivate", app.views.account_reactivate, name='admin_account_reactivate'),
     path("admin_delete_user_profile", app.views.delete_user_profile, name='admin_delete_user_profile'),
     path("admin_create_user/", app.views.admin_user_creation, name='admin_create_user'),
     path("create_admin_user", app.views.create_admin_user, name='create_admin_user'),

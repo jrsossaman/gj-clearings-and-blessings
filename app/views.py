@@ -507,6 +507,81 @@ def update_client_account(request):
 
 @login_required
 @user_passes_test(is_admin)
+def account_deactivate(request):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    form = ConfirmPasswordForm()
+
+    # is_user = selected_client.is_user
+    # user = Client.objects.get(is_user=is_user)
+
+    if selected_client.is_user == True:
+        if request.method == "POST":
+            form = ConfirmPasswordForm(request.POST)
+            
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                authenticated_user = authenticate(username=request.user.username, password=password)
+                if authenticated_user is not None:
+                    try:
+                        selected_client.is_active = False
+                        selected_client.save()
+                        return redirect('admin_client_overview')
+                    except Exception:
+                        messages.error(request, f"An error occurred deactivating {selected_client.first_name} {selected_client.last_name}'s account. Please try again.")
+                else:
+                    messages.error(request, "Incorrect password.")
+                    return redirect('admin_account_deactivate')
+            else:
+                messages.error(request, "Please enter a valid password.")
+        else:
+            form = ConfirmPasswordForm()
+    return render(request, 'admin_account_deactivate.html', {'form': form, 'selected_client': selected_client})
+
+
+@login_required
+@user_passes_test(is_admin)
+def account_reactivate(request):
+    selected_client = None
+    selected_client_id = request.session.get('selected_client', None)
+    if selected_client_id:
+        selected_client = Client.objects.get(id=selected_client_id)
+
+    form = ConfirmPasswordForm()
+
+    # is_user = selected_client.is_user
+    # user = Client.objects.get(is_user=is_user)
+
+    if selected_client.is_user == True:
+        if request.method == "POST":
+            form = ConfirmPasswordForm(request.POST)
+            
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                authenticated_user = authenticate(username=request.user.username, password=password)
+                if authenticated_user is not None:
+                    try:
+                        selected_client.is_active = True
+                        selected_client.save()
+                    except Exception:
+                        messages.error(request, f"An error occurred reactivating {selected_client.first_name} {selected_client.last_name}'s account. Please try again.")
+                    return redirect('admin_client_overview')
+                else:
+                    messages.error(request, "Incorrect password.")
+                    return redirect('admin_account_reactivate')
+            else:
+                messages.error(request, "Please enter a valid password.")
+        else:
+            form = ConfirmPasswordForm()
+    return render(request, 'admin_account_reactivate.html', {'form': form, 'selected_client': selected_client})
+
+
+
+@login_required
+@user_passes_test(is_admin)
 def delete_user_profile(request):
     selected_client = None
     selected_client_id = request.session.get('selected_client', None)

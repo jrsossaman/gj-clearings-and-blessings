@@ -1,4 +1,4 @@
-{% extends 'admin_dashboard.html' %}
+{% extends "admin_dashboard.html" %}
 {% load static %}
 
 {% block extra_css %}
@@ -8,10 +8,11 @@
 
 {% block content %}
 
-<h3>DELETE USER PROFILE</h3>
+<h3>Deactivate Account</h3>
 
 {% if selected_client %}
-    <p>You are about to DELETE <strong>{{ selected_client.first_name }} {{ selected_client.last_name }}'s</strong> Account!</p>
+    <p>You are about to activate <strong>{{ selected_client.first_name }} {{selected_client.last_name}}'s account.</p>
+    <p>You will be able to deactivate their account later.</p>
 {% else %}
     <p>No client selected.</p>
 {% endif %}
@@ -21,8 +22,8 @@
     <label>
         {{ form.as_p }}
         <a href="{% url 'admin_client_overview' %}" class='button-link-cancel'>Cancel</a>
-        <button type="submit" class='delete-button'>CONFIRM DELETE</button>
+        <button type="submit" class='delete-button'>Activate</button>
     </label>
 </form>
 
-{% endblock %}
+{% endblock content %}

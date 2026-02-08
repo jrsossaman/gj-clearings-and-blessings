@@ -36,6 +36,11 @@
                 <a href="{% url 'admin_new_session_sheet' %}" class='button-link'>New Session</a>
                 <a href="{% url 'admin_prev_client_sessions' %}" class='button-link'>Previous Sessions</a>
                 <a href="{% url 'admin_update_client_account' %}" class='button-link'>Update Account</a>
+                {% if selected_client.is_active %}
+                    <a href="{% url 'admin_account_deactivate' %}" class='button-link'>Deactivate User</a>
+                {% else %}
+                    <a href="{% url 'admin_account_reactivate' %}" class='button-link'>Activate User</a>
+                {% endif %}
                 <a href="{% url 'admin_delete_user_profile' %}" class='button-link'>Delete Account</a>
             </div>
         {% else %}
@@ -57,15 +62,3 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-{% comment %}
-<script>
-    $(document).ready(function() {
-        // Enhance the select element
-        $('#id_client').select2({
-            placeholder: "Select a client",
-            allowClear: true
-        });
-    });
-</script>
-</html>
-{% endcomment %}

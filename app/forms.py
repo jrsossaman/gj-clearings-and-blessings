@@ -98,7 +98,7 @@ class PrimaryClientCreationForm(forms.ModelForm):
 class AdditionalClientCreationForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'person_or_pet', 'species', 'gender']
 
 
 
@@ -173,5 +173,5 @@ class LocationSheetForm(ModelForm):
 class ConfirmPasswordForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput,
-        label="Enter your password to confirm delete."
+        label="Enter your password to confirm."
     )
