@@ -1,4 +1,9 @@
 {% extends "admin_dashboard.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/session_forms.css' %}">
+{% endblock %}
 
 {% block content %}
     <h3>Create a new Client or Location Session Sheet for {{ selected_client.first_name }} {{selected_client.last_name }}'s Account</h3>
@@ -6,10 +11,48 @@
     <div class="form-container">
         <form method="POST">
             {% csrf_token %}
-            <label style="font-weight: bold">Create a new Client Session.
-                {{ client_session_form.as_p }}
-                <button type="submit" class='lesser-link' name="submit_client_session">Create Client Session Sheet</button>
-            </label>
+
+            <div class="section">
+                <button type="button" class="collapsible">Name & Date</button>
+                <div class="content">
+                    <label class="label">Client {{ client_session_form.client }}</label>
+                    <label class="label">Date {{ client_session_form.date }}</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <button type="button" class="collapsible">Starting Scores</button>
+                <div class="content">
+                    <label class="label">Spiritual 1 {{ client_session_form.spiritual1 }}</label>
+                    <label class="label">Mental 1 {{ client_session_form.mental1 }}</label>
+                    <label class="label">Emotional 1 {{ client_session_form.emotional1 }}</label>
+                    <label class="label">Physical 1 {{ client_session_form.physical1 }}</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <button type="button" class="collapsible">Work Done</button>
+                <div class="content">
+                    <label class="label">Chakras {{ client_session_form.chakras }}</label>
+                    <label class="label">Cords {{ client_session_form.cords }}</label>
+                    <label class="label"  id="how_many_label" style="display:none;">How Many? {{ client_session_form.how_many }}</label>
+                    <label class="label"  id="to_whom_label" style="display:none;">To Whom? {{ client_session_form.to_whom }}</label>
+                    <label class="label">Hindrances {{ client_session_form.hindrances }}</label>
+                </div>
+            </div>
+
+            <div class="section">
+                <button type="button" class="collapsible">Ending Scores</button>
+                <div class="content">
+                    <label class="label">Spiritual 2 {{ client_session_form.spiritual2 }}</label>
+                    <label class="label">Mental 2 {{ client_session_form.mental2 }}</label>
+                    <label class="label">Emotional 2 {{ client_session_form.emotional2 }}</label>
+                    <label class="label">Physical 2 {{ client_session_form.physical2 }}</label>
+                </div>
+            </div>
+
+            <button type="submit" class='lesser-link' name="submit_client_session">Create Client Session Sheet</button>
+
         </form>
 
         <form method="POST">
@@ -20,5 +63,40 @@
             </label>
         </form>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var coll = document.getElementsByClassName("collapsible");
+            for (var i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "flex") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "flex";
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cordsCheckbox = document.querySelector('#id_cords'); // Assuming the checkbox has id="id_cords"
+        const howManyLabel = document.getElementById('how_many_label');
+        const toWhomLabel = document.getElementById('to_whom_label');
+        function toggleFields() {
+            if (cordsCheckbox.checked) {
+                howManyLabel.style.display = 'block';
+                toWhomLabel.style.display = 'block';
+            } else {
+                howManyLabel.style.display = 'none';
+                toWhomLabel.style.display = 'none';
+            }
+        }
+        cordsCheckbox.addEventListener('change', toggleFields);
+        toggleFields();
+    });
+    </script>
 
 {% endblock %}

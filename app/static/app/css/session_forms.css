@@ -1,0 +1,38 @@
+.collapsible {
+    background-color: #efd07d;
+    color: black;
+    cursor: pointer;
+    padding: 4px 10px;
+    margin: 5px;
+    width: 28%;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Gill Sans', cursive;
+    font-weight: bold;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: background-color 0.3s;
+}
+
+.collapsible:hover {
+    background-color: orange;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: transparent;
+    width: 50%;
+}
+
+.section {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.label {
+    margin-bottom: 5px;
+}
