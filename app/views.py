@@ -368,7 +368,7 @@ def create_session_sheet(request):
             client_session_form = SessionSheetForm(request.POST, clients_queryset=clients)
             if client_session_form.is_valid():
                 session_sheet = client_session_form.save(commit=False)
-                session_sheet.user = request.session.get('selected_client') # 'user_client' before
+                session_sheet.client = user_client # IMPORTANT: MIGHT BREAK # session_sheet.user = request.session.get('selected_client')
                 session_sheet.save()
                 return redirect('admin_prev_client_sessions')
         elif 'submit_location_session' in request.POST:

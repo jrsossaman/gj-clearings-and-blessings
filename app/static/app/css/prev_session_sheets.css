@@ -9,7 +9,7 @@
 .session-grid-header,
 .session-sheet-row {
     display: grid;
-    grid-template-columns: 2fr 2fr repeat(18, 1fr);
+    grid-template-columns: 2fr 2fr repeat(14, 1fr);
     text-align: center;
     gap: 5px;
     width: 100%;

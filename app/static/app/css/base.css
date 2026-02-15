@@ -30,7 +30,7 @@ body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.4); /* black fade */
+    background-color: rgba(0, 0, 0, 0.6); /* black fade */
     z-index: 0;
     pointer-events: none;
 }

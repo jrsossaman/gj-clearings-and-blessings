@@ -53,10 +53,6 @@
                 <div>Chakras</div>
                 <div>Cords</div>
                 <div>Hinderances</div>
-                <div>Dark Entities</div>
-                <div>Attacks</div>
-                <div>Social</div>
-                <div>Viruses</div>
                 <div>S2</div>
                 <div>M2</div>
                 <div>E2</div>
@@ -73,55 +69,27 @@
                 <div>{{ sheet.emotional1 }}</div>
                 <div>{{ sheet.physical1 }}</div>
                 <div>{{ sheet.total1 }}</div>
-                <div>
-                    {% if sheet.chakras %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
+                <div>{{ sheet.chakras }}</div>
                 <div>
                     {% if sheet.cords %}
-                        &#10004
+                        {{ sheet.how_many }}
+                        {{ sheet.to_whom }}
                     {% else %}
                         &#10008
                     {% endif %}
                 </div>
                 <div>
-                    {% if sheet.hinderances %}
-                        &#10004
+                    {% if sheet.hindrances %}
+                        <ul>
+                            {% for hindrance in sheet.get_hindrances_list %}
+                                <li>{{ hindrance }}</li>
+                            {% endfor %}
+                        </ul>
                     {% else %}
                         &#10008
                     {% endif %}
                 </div>
-                <div>
-                    {% if sheet.dark_entities %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.attacks %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.social %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.viruses %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
+                
                 <div>{{ sheet.spiritual2 }}</div>
                 <div>{{ sheet.mental2 }}</div>
                 <div>{{ sheet.emotional2 }}</div>
@@ -130,10 +98,7 @@
                 <div>{{ sheet.percent_change }}%</div>
             </div>
 
-            <div class="session-sheet-notes" style="margin-bottom: 50px; margin-top: 5px">
-                <strong>Notes:   </strong>
-                {{ sheet.notes|default:"No notes provided." }}
-            </div>
+            <div class="session-sheet-notes" style="margin-bottom: 50px; margin-top: 5px"></div>
 
         </div>
         {% endfor %}
@@ -172,10 +137,7 @@
             <div class="location-grid-header">
                 <div>Date</div>
                 <div>Address</div>
-                <div>Any Issues</div>
-                <div>Unwanted Energies</div>
-                <div>Stuck Souls</div>
-                <div>Portals</div>
+                <div>Issues</div>
                 <div>Protection</div>
             </div>
 
@@ -184,28 +146,11 @@
                 <div>{{ sheet.address }}</div>
                 <div>
                     {% if sheet.issues %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.unwanted_energies %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.stuck_souls %}
-                        &#10004
-                    {% else %}
-                        &#10008
-                    {% endif %}
-                </div>
-                <div>
-                    {% if sheet.portals %}
-                        &#10004
+                        <ul>
+                            {% for issue in sheet.get_issues_list %}
+                                <li>{{ issue }}</li>
+                            {% endfor %}
+                        </ul>
                     {% else %}
                         &#10008
                     {% endif %}

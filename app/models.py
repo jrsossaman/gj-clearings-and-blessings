@@ -96,32 +96,33 @@ class Location(models.Model):
         street_ext = f", {self.street_ext}" if self.street_ext else ""
         return f"{self.street} {street_ext}, {self.city}, {self.state} {self.zip_code} {self.country}"
     
-        
+
+
+########## Session Sheet Stuff ###############
+
+OPEN = "open"
+CLOSED_TO_OPEN = "closed_to_open"
+SEE_NOTES = "see_notes"
+
+CHAKRAS_TYPE_CHOICES = [
+    (OPEN, "Open"),
+    (CLOSED_TO_OPEN, "Closed > Open"),
+    (SEE_NOTES, "See Notes"),
+]
+
+DARK_ENTITIES = "dark_entities"
+ATTACKS = "attacks"
+SOCIETAL = "societal"
+VIRUSES = "viruses"
+
+HINDRANCE_TYPE_CHOICES = [
+    (DARK_ENTITIES, "Dark Entities"),
+    (ATTACKS, "Attacks"),
+    (SOCIETAL, "Societal"),
+    (VIRUSES, "Viruses")
+]
 
 class Session_Sheet(models.Model):
-    OPEN = "open"
-    CLOSED_TO_OPEN = "closed_to_open"
-    SEE_NOTES = "see_notes"
-
-    CHAKRAS_TYPE_CHOICES = [
-        (OPEN, "Open"),
-        (CLOSED_TO_OPEN, "Closed > Open"),
-        (SEE_NOTES, "See Notes"),
-    ]
-
-    DARK_ENTITIES = "dark_entities"
-    ATTACKS = "attacks"
-    SOCIETAL = "societal"
-    VIRUSES = "viruses"
-
-    HINDRANCE_TYPE_CHOICES = [
-        ("", "None, or select here."),
-        (DARK_ENTITIES, "Dark Entities"),
-        (ATTACKS, "Attacks"),
-        (SOCIETAL, "Societal"),
-        (VIRUSES, "Viruses")
-    ]
-
     client=models.ForeignKey(Client, on_delete=models.CASCADE, related_name="session_sheets")
 
     date=models.DateField()
@@ -154,7 +155,8 @@ class Session_Sheet(models.Model):
         null=True
     )
     hindrances=models.CharField(
-        max_length=20,
+        max_length=200,
+        blank=True,
         choices=HINDRANCE_TYPE_CHOICES,
         default=""
     )
@@ -184,17 +186,46 @@ class Session_Sheet(models.Model):
             return None
         return (self.total1 / self.total2) * 100
     
+    @property
+    def get_hindrances_list(self):
+        return self.hindrances.split(',')
 
+    @property
+    def set_hindrances_list(self, hindrances):
+        self.hindrances = ",".join(hindrances)
+    
+
+
+UNWANTED_ENERGIES = "unwanted_energies"
+STUCK_SOULS = "stuck_souls"
+PORTALS = "portals"
+
+ISSUES_TYPE_CHOICES = [
+    (UNWANTED_ENERGIES, "Unwanted Energies"),
+    (STUCK_SOULS, "Stuck Souls"),
+    (PORTALS, "Portals")
+]
 
 class Location_Sheet(models.Model):
+
     address=models.ForeignKey(Location, on_delete=models.CASCADE, related_name="location_sheets")
 
     date=models.DateField()
 
-    issues=models.BooleanField(default=False)
-    unwanted_energies=models.BooleanField(default=False)
-    stuck_souls=models.BooleanField(default=False)
-    portals=models.BooleanField(default=False)
+    issues=models.CharField(
+        max_length=200,
+        blank=True,
+        choices=ISSUES_TYPE_CHOICES,
+        default=""
+        )
     protection=models.BooleanField(default=False)
+
+    @property
+    def get_issues_list(self):
+        return self.issues.split(',')
+
+    @property
+    def set_issues_list(self, issues):
+        self.issues = ",".join(issues)
 
     notes=models.TextField(null=True, blank=True)

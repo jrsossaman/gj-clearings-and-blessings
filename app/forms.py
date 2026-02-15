@@ -140,12 +140,26 @@ class SessionSheetForm(ModelForm):
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
         }
+
+    hindrances = forms.MultipleChoiceField(
+        choices=HINDRANCE_TYPE_CHOICES,  # Uses your predefined choices
+        widget=forms.CheckboxSelectMultiple,  # Allows multi-selection with checkboxes
+        required=False,  # Makes this field optional
+    )
     
     def __init__(self, *args, **kwargs):
         clients_queryset = kwargs.pop('clients_queryset', None)
         super().__init__(*args, **kwargs)
         if clients_queryset is not None:
             self.fields['client'].queryset = clients_queryset
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)  # Call parent save to handle other fields
+        if 'hindrances' in self.cleaned_data:  # Ensure 'hindrances' field has data
+            instance.hindrances = ",".join(self.cleaned_data['hindrances'])  # Save multi-choice as a comma-separated string
+        if commit:
+            instance.save()  # Save the instance to the DB
+        return instance
 
 
 
@@ -154,19 +168,32 @@ class LocationSheetForm(ModelForm):
         model = Location_Sheet
         fields = [
             'address', 'date',
-            'issues', 'unwanted_energies',
-            'stuck_souls', 'portals', 'protection',
+            'issues', 'protection',
             'notes'
         ]
         widgets = {
             'date': forms.DateInput(attrs={"type": "date"}),
         }
 
+    issues = forms.MultipleChoiceField(
+        choices=ISSUES_TYPE_CHOICES,  # Uses your predefined choices
+        widget=forms.CheckboxSelectMultiple,  # Allows multi-selection with checkboxes
+        required=False,  # Makes this field optional
+    )
+
     def __init__(self, *args, **kwargs):
         locations_queryset = kwargs.pop('locations_queryset', None)
         super().__init__(*args, **kwargs)
         if locations_queryset is not None:
             self.fields['address'].queryset = locations_queryset
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)  # Call parent save to handle other fields
+        if 'issues' in self.cleaned_data:  # Ensure 'hindrances' field has data
+            instance.issues = ",".join(self.cleaned_data['issues'])  # Save multi-choice as a comma-separated string
+        if commit:
+            instance.save()  # Save the instance to the DB
+        return instance
 
 
 

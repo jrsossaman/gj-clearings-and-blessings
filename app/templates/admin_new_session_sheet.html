@@ -15,39 +15,39 @@
             <div class="section">
                 <button type="button" class="collapsible">Name & Date</button>
                 <div class="content">
-                    <label class="label">Client {{ client_session_form.client }}</label>
-                    <label class="label">Date {{ client_session_form.date }}</label>
+                    <label class="label">Client: {{ client_session_form.client }}</label>
+                    <label class="label">Date: {{ client_session_form.date }}</label>
                 </div>
             </div>
 
             <div class="section">
                 <button type="button" class="collapsible">Starting Scores</button>
                 <div class="content">
-                    <label class="label">Spiritual 1 {{ client_session_form.spiritual1 }}</label>
-                    <label class="label">Mental 1 {{ client_session_form.mental1 }}</label>
-                    <label class="label">Emotional 1 {{ client_session_form.emotional1 }}</label>
-                    <label class="label">Physical 1 {{ client_session_form.physical1 }}</label>
+                    <label class="label">Spiritual 1: {{ client_session_form.spiritual1 }}</label>
+                    <label class="label">Mental 1: {{ client_session_form.mental1 }}</label>
+                    <label class="label">Emotional 1: {{ client_session_form.emotional1 }}</label>
+                    <label class="label">Physical 1: {{ client_session_form.physical1 }}</label>
                 </div>
             </div>
 
             <div class="section">
                 <button type="button" class="collapsible">Work Done</button>
                 <div class="content">
-                    <label class="label">Chakras {{ client_session_form.chakras }}</label>
-                    <label class="label">Cords {{ client_session_form.cords }}</label>
+                    <label class="label">Chakras: {{ client_session_form.chakras }}</label>
+                    <label class="label">Cords: {{ client_session_form.cords }}</label>
                     <label class="label"  id="how_many_label" style="display:none;">How Many? {{ client_session_form.how_many }}</label>
                     <label class="label"  id="to_whom_label" style="display:none;">To Whom? {{ client_session_form.to_whom }}</label>
-                    <label class="label">Hindrances {{ client_session_form.hindrances }}</label>
+                    <label class="label">Hindrances: {{ client_session_form.hindrances }}</label>
                 </div>
             </div>
 
             <div class="section">
                 <button type="button" class="collapsible">Ending Scores</button>
                 <div class="content">
-                    <label class="label">Spiritual 2 {{ client_session_form.spiritual2 }}</label>
-                    <label class="label">Mental 2 {{ client_session_form.mental2 }}</label>
-                    <label class="label">Emotional 2 {{ client_session_form.emotional2 }}</label>
-                    <label class="label">Physical 2 {{ client_session_form.physical2 }}</label>
+                    <label class="label">Spiritual 2: {{ client_session_form.spiritual2 }}</label>
+                    <label class="label">Mental 2: {{ client_session_form.mental2 }}</label>
+                    <label class="label">Emotional 2: {{ client_session_form.emotional2 }}</label>
+                    <label class="label">Physical 2: {{ client_session_form.physical2 }}</label>
                 </div>
             </div>
 
@@ -55,14 +55,32 @@
 
         </form>
 
+
+
         <form method="POST">
             {% csrf_token %}
-            <label style="font-weight: bold">Create a new Location Session.
-                {{ location_session_form.as_p }}
+
+                <div class="section">
+                    <button type="button" class="collapsible">Name & Date</button>
+                    <div class="content">
+                        <label class="label">Address: {{ location_session_form.address }}</label>
+                        <label class="label">Date: {{ location_session_form.date }}</label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <button type="button" class="collapsible">Work Done</button>
+                    <div class="content">
+                        <label class="label">Issues: {{ location_session_form.issues }}</label>
+                        <label class="label">Protection: {{ location_session_form.protection }}</label>
+                    </div>
+                </div>
+
                 <button type="submit" class='lesser-link' name="submit_location_session">Create Location Session Sheet</button>
-            </label>
         </form>
     </div>
+
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
