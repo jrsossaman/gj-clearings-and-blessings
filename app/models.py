@@ -150,15 +150,15 @@ class Session_Sheet(models.Model):
     )
     to_whom=models.CharField(
         max_length=999,
-        validators=[numbers_only],
+        validators=[letters_only],
         blank=True,
         null=True
     )
     hindrances=models.CharField(
         max_length=200,
         blank=True,
-        choices=HINDRANCE_TYPE_CHOICES,
-        default=""
+        # choices=HINDRANCE_TYPE_CHOICES,
+        # default=""
     )
     
     spiritual2=models.PositiveIntegerField(
@@ -190,7 +190,7 @@ class Session_Sheet(models.Model):
     def get_hindrances_list(self):
         return self.hindrances.split(',')
 
-    @property
+    # @property
     def set_hindrances_list(self, hindrances):
         self.hindrances = ",".join(hindrances)
     

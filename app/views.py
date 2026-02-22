@@ -368,9 +368,12 @@ def create_session_sheet(request):
             client_session_form = SessionSheetForm(request.POST, clients_queryset=clients)
             if client_session_form.is_valid():
                 session_sheet = client_session_form.save(commit=False)
-                session_sheet.client = user_client # IMPORTANT: MIGHT BREAK # session_sheet.user = request.session.get('selected_client')
+                # session_sheet.user = request.session.get('selected_client') # IMPORTANT: MIGHT BREAK. THIS AND NEXT LINE SWAP WHEN BROKEN.
+                # session_sheet.client = user_client # IMPORTANT: MIGHT BREAK. THIS AND PREV LINE SWAP WHEN BROKEN. 
                 session_sheet.save()
                 return redirect('admin_prev_client_sessions')
+            else:
+                print(client_session_form.errors)
         elif 'submit_location_session' in request.POST:
             location_session_form = LocationSheetForm(request.POST, locations_queryset=locations)
             if location_session_form.is_valid():

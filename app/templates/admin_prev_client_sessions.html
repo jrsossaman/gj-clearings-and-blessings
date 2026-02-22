@@ -1,5 +1,6 @@
 {% extends "admin_dashboard.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'app/css/prev_session_sheets.css' %}">
@@ -69,7 +70,7 @@
                 <div>{{ sheet.emotional1 }}</div>
                 <div>{{ sheet.physical1 }}</div>
                 <div>{{ sheet.total1 }}</div>
-                <div>{{ sheet.chakras }}</div>
+                <div>{{ sheet.chakras|chakras_short }}</div>
                 <div>
                     {% if sheet.cords %}
                         {{ sheet.how_many }}
@@ -82,7 +83,7 @@
                     {% if sheet.hindrances %}
                         <ul>
                             {% for hindrance in sheet.get_hindrances_list %}
-                                <li>{{ hindrance }}</li>
+                                <li>{{ hindrance|hindrances_short }}</li>
                             {% endfor %}
                         </ul>
                     {% else %}

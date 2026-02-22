@@ -152,14 +152,25 @@ class SessionSheetForm(ModelForm):
         super().__init__(*args, **kwargs)
         if clients_queryset is not None:
             self.fields['client'].queryset = clients_queryset
+        if self.instance.pk and self.instance.hindrances:
+            self.initial['hindrances'] = self.instance.hindrances.split(',')
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)  # Call parent save to handle other fields
-        if 'hindrances' in self.cleaned_data:  # Ensure 'hindrances' field has data
-            instance.hindrances = ",".join(self.cleaned_data['hindrances'])  # Save multi-choice as a comma-separated string
-        if commit:
-            instance.save()  # Save the instance to the DB
-        return instance
+
+    def clean_hindrances(self):
+        data = self.cleaned_data.get('hindrances')
+        if data:
+            return ",".join(data)
+        return ""
+
+    
+
+    # def save(self, commit=True):
+    #     instance = super().save(commit=False)  # Call parent save to handle other fields
+    #     if 'hindrances' in self.cleaned_data:  # Ensure 'hindrances' field has data
+    #         instance.hindrances = ",".join(self.cleaned_data['hindrances'])  # Save multi-choice as a comma-separated string
+    #     if commit:
+    #         instance.save()  # Save the instance to the DB
+    #     return instance
 
 
 
